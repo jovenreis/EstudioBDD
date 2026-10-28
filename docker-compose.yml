@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: estudio-bdd-db
+    environment:
+      POSTGRES_DB: estudiobdd
+      POSTGRES_USER: estudio
+      POSTGRES_PASSWORD: estudio
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
