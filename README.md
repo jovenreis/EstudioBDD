@@ -111,4 +111,6 @@ id, então isso serve só para demonstração.
 
 - [Diagrama de classes](docs/diagrama-classes.md)
 - [Registro de IA](docs/registro-ia.md)
-- [Cenários escritos pelo grupo](docs/cenarios-manuais.md)
+- [História e cenários iniciais](docs/cenarios-iniciais.md)
+- [Dúvidas para o professor](docs/duvidas-professor.md)
+- [Caminho de "cadastrar um cenário" pelas cinco camadas](docs/caminho-cadastrar-cenario.md)
