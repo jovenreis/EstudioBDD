@@ -53,7 +53,13 @@ public class Cenario {
 
     public Cenario(String titulo, OrigemCenario origem) {
         this.titulo = titulo;
-        this.origem = origem;
+        this.origem = origem != null ? origem : OrigemCenario.HUMANO;
+    }
+
+    public void atualizarDados(Cenario dados) {
+        this.titulo = dados.getTitulo();
+        this.origem = dados.getOrigem();
+        substituirPassos(dados.getPassos());
     }
 
     public void adicionarPasso(TipoPasso tipo, String texto) {
@@ -64,9 +70,10 @@ public class Cenario {
 
     // usado na edição: troca todos os passos e renumera as posições
     public void substituirPassos(List<Passo> novos) {
+        List<Passo> copia = new ArrayList<>(novos);
         passos.clear();
         int pos = 1;
-        for (Passo p : novos) {
+        for (Passo p : copia) {
             p.setPosicao(pos++);
             p.setCenario(this);
             passos.add(p);
