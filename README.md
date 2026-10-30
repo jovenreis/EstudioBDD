@@ -82,14 +82,19 @@ cd backend
 mvn test
 ```
 
+Os testes atuais não precisam do banco.
+
+Para testar os endpoints à mão, use o arquivo `docs/requisicoes.http` com a extensão
+REST Client do VS Code.
+
 ### 4. SPA
 
 Em construção.
 
 ## Identidade simulada
 
-A API não tem autenticação. O usuário atual será informado pelo cabeçalho `X-Usuario-Id`
-e os serviços usam esse valor para validar a autoria. Qualquer cliente pode enviar qualquer
+A API não tem autenticação. O usuário atual é informado pelo cabeçalho `X-Usuario-Id`
+nas operações que alteram histórias e cenários, e os serviços usam esse valor para validar a autoria (regra 3). Qualquer cliente pode enviar qualquer
 id, então isso serve só para demonstração.
 
 ## Tarefas previstas
@@ -97,20 +102,25 @@ id, então isso serve só para demonstração.
 - [x] Modelagem e diagrama de classes
 - [x] Projeto Spring Boot, pacotes e entidades
 - [x] Dados fictícios
-- [ ] CRUD de projetos, histórias, cenários e passos (regras 1, 2 e 3)
-- [ ] Tratamento de erros padronizado com ProblemDetail
+- [x] CRUD de usuários, projetos, histórias, cenários e passos (regras 1, 2 e 3)
+- [x] Tratamento de erros padronizado com ProblemDetail
+- [x] Identidade simulada pelo cabeçalho `X-Usuario-Id`
 - [ ] Sugestões: registro, aceitação e rejeição (regra 4)
 - [ ] Exportação `.feature` (regra 5)
-- [ ] Consulta e resumo do projeto (regras 6 e 7)
-- [ ] Testes de regras e teste ArchUnit
-- [ ] Documentação dos endpoints
+- [x] Lista de histórias do projeto com filtro por prioridade (regra 6)
+- [ ] Resumo do projeto (regra 7)
+- [x] Teste da gramática do cenário (regra 2)
+- [ ] Demais testes de regras e teste ArchUnit
+- [x] Documentação dos endpoints (parcial, atualizada a cada etapa)
 - [ ] SPA
 - [ ] Roteiro de verificação
 
 ## Documentação
 
 - [Diagrama de classes](docs/diagrama-classes.md)
+- [Endpoints](docs/endpoints.md)
+- [Requisições de teste](docs/requisicoes.http)
+- [Caminho de "cadastrar um cenário" pelas cinco camadas](docs/caminho-cadastrar-cenario.md)
 - [Registro de IA](docs/registro-ia.md)
 - [História e cenários iniciais](docs/cenarios-iniciais.md)
 - [Dúvidas para o professor](docs/duvidas-professor.md)
-- [Caminho de "cadastrar um cenário" pelas cinco camadas](docs/caminho-cadastrar-cenario.md)

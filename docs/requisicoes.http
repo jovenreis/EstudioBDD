@@ -1,0 +1,151 @@
+### Requisições para testar a API manualmente.
+### No VS Code/Codespaces, instale a extensão "REST Client" (humao.rest-client)
+### e clique em "Send Request" acima de cada requisição.
+### Ids de acordo com os dados fictícios: usuário 1 = Ana, 2 = Carlos; história 1 = Login (autora Ana).
+
+@api = http://localhost:8080/api
+
+### Lista os usuários
+GET {{api}}/usuarios
+
+### Lista os projetos
+GET {{api}}/projetos
+
+### Histórias do projeto 1
+GET {{api}}/projetos/1/historias
+
+### Histórias do projeto 1 com prioridade ALTA
+GET {{api}}/projetos/1/historias?prioridade=ALTA
+
+### Detalhe da história 1
+GET {{api}}/historias/1
+
+### --- Regra 1 ---
+
+### Projeto com nome repetido -> 409
+POST {{api}}/projetos
+Content-Type: application/json
+
+{ "nome": "Loja", "descricao": "duplicado" }
+
+### História com título repetido no projeto -> 409
+POST {{api}}/projetos/1/historias
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{ "titulo": "Login", "papel": "cliente", "objetivo": "entrar", "beneficio": "comprar", "prioridade": "ALTA" }
+
+### História sem benefício -> 400
+POST {{api}}/projetos/1/historias
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{ "titulo": "Recuperar senha", "papel": "cliente", "objetivo": "recuperar a senha", "beneficio": "", "prioridade": "MEDIA" }
+
+### História válida -> 201
+POST {{api}}/projetos/1/historias
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{ "titulo": "Recuperar senha", "papel": "cliente", "objetivo": "recuperar a senha por e-mail", "beneficio": "voltar a acessar a loja", "prioridade": "MEDIA" }
+
+### --- Regra 2 ---
+
+### Cenário válido -> 201
+POST {{api}}/historias/1/cenarios
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{
+  "titulo": "Login com e-mail não cadastrado é recusado",
+  "passos": [
+    { "tipo": "DADO", "texto": "nenhum cliente com o e-mail \"maria@exemplo.com\"" },
+    { "tipo": "QUANDO", "texto": "alguém entra com \"maria@exemplo.com\" e \"abc123\"" },
+    { "tipo": "ENTAO", "texto": "o acesso é negado" }
+  ]
+}
+
+### Cenário sem Então -> 422
+POST {{api}}/historias/1/cenarios
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{
+  "titulo": "Sem então",
+  "passos": [
+    { "tipo": "DADO", "texto": "um cliente cadastrado" },
+    { "tipo": "QUANDO", "texto": "ele entra" }
+  ]
+}
+
+### Cenário fora de ordem (Então antes de Quando) -> 422
+POST {{api}}/historias/1/cenarios
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{
+  "titulo": "Fora de ordem",
+  "passos": [
+    { "tipo": "DADO", "texto": "um cliente cadastrado" },
+    { "tipo": "ENTAO", "texto": "o acesso é liberado" },
+    { "tipo": "QUANDO", "texto": "ele entra" }
+  ]
+}
+
+### Cenário iniciado por E -> 422
+POST {{api}}/historias/1/cenarios
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{
+  "titulo": "Começa com E",
+  "passos": [
+    { "tipo": "E", "texto": "um cliente cadastrado" },
+    { "tipo": "QUANDO", "texto": "ele entra" },
+    { "tipo": "ENTAO", "texto": "o acesso é liberado" }
+  ]
+}
+
+### Cenário com título repetido na história -> 409
+POST {{api}}/historias/1/cenarios
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{
+  "titulo": "Login com dados corretos",
+  "passos": [
+    { "tipo": "QUANDO", "texto": "x" },
+    { "tipo": "ENTAO", "texto": "y" }
+  ]
+}
+
+### Editar cenário 1 trocando os passos -> 200 (passos renumerados na ordem enviada)
+PUT {{api}}/cenarios/1
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{
+  "titulo": "Login com dados corretos",
+  "passos": [
+    { "tipo": "DADO", "texto": "o cliente \"joao@exemplo.com\" cadastrado com a senha \"abc123\"" },
+    { "tipo": "E", "texto": "a conta dele está ativa" },
+    { "tipo": "QUANDO", "texto": "ele entra com \"joao@exemplo.com\" e \"abc123\"" },
+    { "tipo": "ENTAO", "texto": "o acesso é liberado" }
+  ]
+}
+
+### --- Regra 3 ---
+
+### Carlos (2) tenta editar história da Ana -> 403
+PUT {{api}}/historias/1
+X-Usuario-Id: 2
+Content-Type: application/json
+
+{ "titulo": "Login", "papel": "cliente", "objetivo": "entrar", "beneficio": "comprar", "prioridade": "BAIXA" }
+
+### Carlos (2) tenta excluir cenário da história da Ana -> 403
+DELETE {{api}}/cenarios/2
+X-Usuario-Id: 2
+
+### Sem cabeçalho X-Usuario-Id -> 400
+DELETE {{api}}/cenarios/2

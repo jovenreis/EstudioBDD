@@ -7,6 +7,7 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 | 1 | API | 28/10/2026 | Estrutura inicial e mapeamento das entidades |
 | 2 | API | 28/10/2026 | Ambiente do Codespaces não era criado |
 | 3 | API | 28/10/2026 | Ampliação dos cenários iniciais e dúvidas sobre o enunciado |
+| 4 | API | 30/10/2026 | Núcleo da API (Semana 2) |
 
 ---
 
@@ -63,3 +64,23 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
   `docs/duvidas-professor.md`.
 - **Verificação:** conferimos os cenários aceitos contra o texto da regra 2; eles viraram
   casos de teste em `ValidadorCenarioTest`.
+
+## 4. Núcleo da API (Semana 2)
+
+- **Ferramenta:** Claude (Anthropic)
+- **Problema:** implementar o CRUD de usuários, projetos, histórias, cenários e passos, com as
+  regras 1, 2 e 3, erros padronizados e identidade simulada.
+- **Prompt (resumo):** pedimos a implementação do núcleo da API seguindo as camadas do AGENTS.md,
+  com explicação de cada parte.
+- **Proposta da IA:** serviços com as regras de negócio; `ValidadorCenario` para a gramática
+  Dado/Quando/Então; `TratadorErros` com ProblemDetail (400, 403, 404, 409, 422); DTOs em records;
+  cabeçalho `X-Usuario-Id`; passos enviados e editados junto com o cenário; bloqueio da exclusão
+  de projeto com histórias.
+- **Decisão do grupo:** _(revisar)_ aceitamos a proposta. Ficaram registradas como dúvidas para
+  o professor a edição dos passos junto com o cenário e a exclusão de projeto com histórias.
+- **Mudanças realizadas:** pacotes `controller`, `dto` e `service`; consultas nos repositórios;
+  métodos auxiliares nas entidades; `ValidadorCenarioTest`; `docs/endpoints.md` e
+  `docs/requisicoes.http`.
+- **Verificação:** `mvn test` (9 testes da regra 2) e as requisições de `requisicoes.http`:
+  cenário válido aceito (201), cenários inválidos rejeitados (422) e edição por quem não é autor
+  bloqueada (403). Prints em `docs/evidencias/`.

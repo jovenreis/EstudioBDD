@@ -28,7 +28,16 @@ cd frontend && npm install && npm run dev
 - Dependências por construtor. Não usar `@Autowired` em atributo.
 - Associações `@ManyToOne` com `FetchType.LAZY`. `spring.jpa.open-in-view=false`, então
   qualquer acesso a coleção LAZY deve acontecer dentro de um método `@Transactional` do service.
-- Erros com `@RestControllerAdvice` devolvendo `ProblemDetail`.
+- Erros com `@RestControllerAdvice` (`controller/TratadorErros`) devolvendo `ProblemDetail`.
+  Os serviços lançam `RecursoNaoEncontradoException` (404), `RegraNegocioException` (422),
+  `ConflitoException` (409) e `AcessoNegadoException` (403). Não devolver ResponseEntity de erro
+  manualmente no controller.
+- Conversão DTO ↔ domínio no controller: `XxxRequest.paraDominio()` e `XxxResponse.de(entidade)`.
+  O serviço recebe e devolve entidades.
+- Como `open-in-view` está desligado, o serviço deve chamar `Hibernate.initialize(...)` em tudo
+  que o `XxxResponse.de` for ler (associações e coleções LAZY) antes de sair do método `@Transactional`.
+  Esquecer disso gera `LazyInitializationException`.
+- Passos não têm endpoint próprio: são enviados dentro do cenário e a edição substitui a lista inteira.
 
 ## Convenções
 
