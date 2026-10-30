@@ -76,15 +76,36 @@ public class HistoriaUsuario {
     protected HistoriaUsuario() {
     }
 
-    public HistoriaUsuario(Projeto projeto, Usuario autor, String titulo,
-                           String papel, String objetivo, String beneficio, Prioridade prioridade) {
-        this.projeto = projeto;
-        this.autor = autor;
+    public HistoriaUsuario(String titulo, String papel, String objetivo, String beneficio, Prioridade prioridade) {
         this.titulo = titulo;
         this.papel = papel;
         this.objetivo = objetivo;
         this.beneficio = beneficio;
         this.prioridade = prioridade;
+    }
+
+    public HistoriaUsuario(Projeto projeto, Usuario autor, String titulo,
+                           String papel, String objetivo, String beneficio, Prioridade prioridade) {
+        this(titulo, papel, objetivo, beneficio, prioridade);
+        this.projeto = projeto;
+        this.autor = autor;
+    }
+
+    public void vincular(Projeto projeto, Usuario autor) {
+        this.projeto = projeto;
+        this.autor = autor;
+    }
+
+    public void atualizarDados(HistoriaUsuario dados) {
+        this.titulo = dados.getTitulo();
+        this.papel = dados.getPapel();
+        this.objetivo = dados.getObjetivo();
+        this.beneficio = dados.getBeneficio();
+        this.prioridade = dados.getPrioridade();
+    }
+
+    public boolean isAutor(Long usuarioId) {
+        return autor != null && autor.getId().equals(usuarioId);
     }
 
     @PrePersist
@@ -102,6 +123,15 @@ public class HistoriaUsuario {
         cenario.setHistoria(this);
         cenario.setPosicao(cenarios.size() + 1);
         cenarios.add(cenario);
+    }
+
+    // tira o cenário da lista (orphanRemoval apaga do banco) e renumera os que sobraram
+    public void removerCenario(Cenario cenario) {
+        cenarios.remove(cenario);
+        int pos = 1;
+        for (Cenario c : cenarios) {
+            c.setPosicao(pos++);
+        }
     }
 
     public void adicionarSugestao(Sugestao sugestao) {
