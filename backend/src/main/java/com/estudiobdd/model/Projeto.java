@@ -52,6 +52,12 @@ public class Projeto {
         dataCriacao = LocalDateTime.now();
     }
 
+    public void atualizarDados(Projeto dados) {
+        this.nome = dados.getNome();
+        this.descricao = dados.getDescricao();
+        this.contextoDominio = dados.getContextoDominio();
+    }
+
     public Long getId() {
         return id;
     }
