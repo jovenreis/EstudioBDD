@@ -76,8 +76,14 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
   Dado/Quando/Então; `TratadorErros` com ProblemDetail (400, 403, 404, 409, 422); DTOs em records;
   cabeçalho `X-Usuario-Id`; passos enviados e editados junto com o cenário; bloqueio da exclusão
   de projeto com histórias.
-- **Decisão do grupo:** _(revisar)_ aceitamos a proposta. Ficaram registradas como dúvidas para
-  o professor a edição dos passos junto com o cenário e a exclusão de projeto com histórias.
+- **Decisão do grupo:** aceitamos a proposta depois de executar e testar a API. Rodamos o
+  `mvn test` nos três ambientes e testamos cada requisição de `requisicoes.http`, conferindo se
+  os códigos de resposta batiam com as regras: 201 para cenário válido, 422 para cenário sem
+  Então, fora de ordem ou iniciado por E, 409 para título repetido e 403 quando outro usuário
+  tenta editar a história. Mantivemos duas decisões da IA como provisórias e as registramos em
+  `duvidas-professor.md`: os passos são editados junto com o cenário, e um projeto com histórias
+  não pode ser excluído. Também decidimos concentrar os commits desta etapa em um integrante,
+  enquanto os outros dois validavam a execução nos próprios ambientes.
 - **Mudanças realizadas:** pacotes `controller`, `dto` e `service`; consultas nos repositórios;
   métodos auxiliares nas entidades; `ValidadorCenarioTest`; `docs/endpoints.md` e
   `docs/requisicoes.http`.
