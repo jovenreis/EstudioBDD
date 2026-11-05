@@ -8,6 +8,8 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 | 2 | API | 28/10/2026 | Ambiente do Codespaces não era criado |
 | 3 | API | 28/10/2026 | Ampliação dos cenários iniciais e dúvidas sobre o enunciado |
 | 4 | API | 30/10/2026 | Núcleo da API (Semana 2) |
+| 5 | API | 30/10/2026 | Sugestões, exportação, resumo e testes |
+| 6 | SPA | 30/10/2026 | Início da SPA |
 
 ---
 
@@ -90,3 +92,35 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 - **Verificação:** `mvn test` (9 testes da regra 2) e as requisições de `requisicoes.http`:
   cenário válido aceito (201), cenários inválidos rejeitados (422) e edição por quem não é autor
   bloqueada (403). Prints em `docs/evidencias/`.
+
+## 5. API completa: sugestões, exportação, resumo e testes (Semana 3)
+
+- **Ferramenta:** Claude (Anthropic)
+- **Problema:** implementar as regras 4, 5 e 7, os testes obrigatórios (rejeição sem motivo,
+  exportação com sugestão pendente) e a regra de arquitetura com ArchUnit.
+- **Prompt (resumo):** pedimos a implementação das sugestões, da exportação `.feature` e do
+  resumo do projeto, seguindo o AGENTS.md, e os testes que rodam no `mvn test`.
+- **Proposta da IA:** `SugestaoService` (aceitar e rejeitar como ações `POST`, motivo validado
+  no serviço para devolver 422), `ExportacaoService` (gera o Gherkin e bloqueia sem cenários ou
+  com pendência), `ResumoService` (contagens com consultas derivadas do Spring Data), CORS
+  limitado à origem da SPA, `SugestaoServiceTest` e `ExportacaoServiceTest` com Mockito e
+  `ArquiteturaTest` com ArchUnit.
+- **Decisão do grupo:** _(preencher depois de testar)_
+- **Mudanças realizadas:** _(preencher)_
+- **Verificação:** `mvn test` e as requisições das regras 4, 5 e 7 em `requisicoes.http`.
+
+## 6. Início da SPA (Semana 3)
+
+- **Parte:** SPA
+- **Ferramenta:** Claude (Anthropic)
+- **Problema:** criar a SPA com a seleção do usuário de demonstração e a lista de projetos e
+  histórias com filtro por prioridade, consumindo a API.
+- **Prompt (resumo):** pedimos uma SPA em React + Vite que funcionasse no Codespaces, sem
+  regra de negócio no front-end.
+- **Proposta da IA:** `api.js` centralizando as chamadas e o cabeçalho `X-Usuario-Id`;
+  `UsuarioContext` para o usuário escolhido; telas de projetos e histórias com o filtro enviado
+  à API; proxy do Vite para `/api`, porque no Codespaces cada porta tem um endereço diferente.
+- **Decisão do grupo:** _(preencher depois de testar)_
+- **Mudanças realizadas:** _(preencher)_
+- **Verificação:** `npm run dev`, troca de usuário no topo, lista de projetos e filtro por
+  prioridade mostrando os dados reais do banco.

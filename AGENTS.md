@@ -14,7 +14,7 @@ negócio estão resumidas abaixo.
 ```bash
 docker compose up -d          # banco (raiz do repositório)
 cd backend && mvn spring-boot:run
-cd backend && mvn test        # testes de regras + ArchUnit
+cd backend && mvn test        # testes de regras (2, 4 e 5) + ArchUnit
 cd frontend && npm install && npm run dev
 ```
 
@@ -38,6 +38,15 @@ cd frontend && npm install && npm run dev
   que o `XxxResponse.de` for ler (associações e coleções LAZY) antes de sair do método `@Transactional`.
   Esquecer disso gera `LazyInitializationException`.
 - Passos não têm endpoint próprio: são enviados dentro do cenário e a edição substitui a lista inteira.
+
+## SPA (`frontend/`)
+
+- React 18 + Vite 5 + React Router 6, JavaScript (sem TypeScript), CSS puro em `src/styles.css`.
+- Toda chamada HTTP passa por `src/api.js`, que coloca o `X-Usuario-Id` e transforma o
+  ProblemDetail em `ErroApi` com a mensagem (`detail`) da API.
+- A SPA não valida regra de negócio: mostra a mensagem que a API devolveu.
+- Filtros (como prioridade) são enviados para a API, não aplicados no navegador.
+- O usuário de demonstração fica em `UsuarioContext.jsx`.
 
 ## Convenções
 

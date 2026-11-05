@@ -50,6 +50,61 @@ Valores aceitos:
 - `origem`: `HUMANO` (padrão), `SUGESTAO_IA`
 - `tipo` do passo: `DADO`, `QUANDO`, `ENTAO`, `E`, `MAS`
 
+## Sugestões (regra 4)
+
+| Método | Caminho | Descrição | Respostas |
+|---|---|---|---|
+| GET | `/api/historias/{historiaId}/sugestoes?decisao=PENDENTE` | Lista as sugestões da história. `decisao` é opcional (`PENDENTE`, `ACEITA`, `REJEITADA`) | 200, 404 |
+| POST * | `/api/historias/{historiaId}/sugestoes` | Registra `{ferramenta, prompt, conteudo}`. A sugestão nasce `PENDENTE` | 201, 400, 404 |
+| GET | `/api/sugestoes/{id}` | Busca uma sugestão | 200, 404 |
+| POST * | `/api/sugestoes/{id}/aceitar` | Aceita. Corpo opcional `{justificativa}`. Não altera os cenários | 200, 404, 422 (já decidida) |
+| POST * | `/api/sugestoes/{id}/rejeitar` | Rejeita com `{motivo, justificativa}`. `motivo` obrigatório | 200, 404, 422 (sem motivo ou já decidida) |
+
+`motivo`: `INCORRETA`, `GENERICA`, `DUPLICADA`, `FORA_DO_ESCOPO`, `OUTRO`.
+
+## Exportação (regra 5)
+
+| Método | Caminho | Descrição | Respostas |
+|---|---|---|---|
+| GET | `/api/historias/{id}/feature` | Devolve a história em Gherkin (`text/plain`, `# language: pt`) com `Content-Disposition` de anexo | 200, 404, 422 (sem cenários ou com sugestão pendente) |
+
+Exemplo de saída:
+
+```gherkin
+# language: pt
+Funcionalidade: Login
+  Como cliente
+  Quero entrar na loja com e-mail e senha
+  Para acompanhar meus pedidos
+
+  Cenário: Login com dados corretos
+    Dado o cliente "joao@exemplo.com" cadastrado com a senha "abc123"
+    Quando ele entra com "joao@exemplo.com" e "abc123"
+    Então o acesso é liberado
+```
+
+## Resumo do projeto (regra 7)
+
+| Método | Caminho | Descrição | Respostas |
+|---|---|---|---|
+| GET | `/api/projetos/{id}/resumo` | Total de histórias, cenários por origem, sugestões por decisão e motivos de rejeição (do mais para o menos frequente) | 200, 404 |
+
+```json
+{
+  "projetoId": 1,
+  "projetoNome": "Loja",
+  "totalHistorias": 2,
+  "cenariosPorOrigem": { "HUMANO": 3, "SUGESTAO_IA": 0 },
+  "sugestoesPorDecisao": { "PENDENTE": 0, "ACEITA": 1, "REJEITADA": 1 },
+  "motivosRejeicao": [ { "motivo": "GENERICA", "quantidade": 1 } ]
+}
+```
+
+## CORS
+
+A API só aceita chamadas de navegador vindas da origem da SPA, configurada em
+`app.cors.origem` (padrão `http://localhost:5173`, ou a variável de ambiente `CORS_ORIGEM`).
+
 ## Formato dos erros
 
 Todos os erros seguem o ProblemDetail (RFC 9457):

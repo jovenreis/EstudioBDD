@@ -149,3 +149,62 @@ X-Usuario-Id: 2
 
 ### Sem cabeçalho X-Usuario-Id -> 400
 DELETE {{api}}/cenarios/2
+
+### --- Regra 4: sugestões ---
+
+### Sugestões da história 1 (a carga inicial tem uma pendente)
+GET {{api}}/historias/1/sugestoes
+
+### Só as pendentes
+GET {{api}}/historias/1/sugestoes?decisao=PENDENTE
+
+### Registrar sugestão -> 201, nasce PENDENTE
+POST {{api}}/historias/1/sugestoes
+X-Usuario-Id: 2
+Content-Type: application/json
+
+{ "ferramenta": "Claude", "prompt": "Sugira um cenário de borda para o login", "conteudo": "Cenário: login com e-mail em maiúsculas é aceito" }
+
+### Rejeitar sem motivo -> 422
+POST {{api}}/sugestoes/1/rejeitar
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{ "justificativa": "não serve" }
+
+### --- Regra 5: exportação ---
+
+### Exportar história 1 com sugestão pendente -> 422
+GET {{api}}/historias/1/feature
+
+### Exportar história 3 (sem cenários) -> 422
+GET {{api}}/historias/3/feature
+
+### Aceitar a sugestão 1 -> 200
+POST {{api}}/sugestoes/1/aceitar
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{ "justificativa": "caso de borda importante" }
+
+### Alterar sugestão já decidida -> 422
+POST {{api}}/sugestoes/1/rejeitar
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{ "motivo": "INCORRETA" }
+
+### Rejeitar com motivo a sugestão registrada acima (confira o id na resposta do registro) -> 200
+POST {{api}}/sugestoes/2/rejeitar
+X-Usuario-Id: 1
+Content-Type: application/json
+
+{ "motivo": "GENERICA", "justificativa": "não descreve um comportamento concreto" }
+
+### Exportar história 1 sem pendências -> 200 com o .feature
+GET {{api}}/historias/1/feature
+
+### --- Regra 7: resumo ---
+
+### Resumo do projeto 1
+GET {{api}}/projetos/1/resumo

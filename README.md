@@ -16,7 +16,7 @@ com ferramentas de IA e exportar as histórias como arquivos `.feature`.
 
 - API: Java 21, Spring Boot 3.5, Spring Data JPA, Bean Validation
 - Banco: PostgreSQL 16 (via Docker Compose)
-- SPA: React + Vite (pasta `frontend/`, em construção)
+- SPA: React 18 + Vite 5 + React Router (pasta `frontend/`)
 
 ## Estrutura
 
@@ -82,14 +82,31 @@ cd backend
 mvn test
 ```
 
-Os testes atuais não precisam do banco.
+Os testes não precisam do banco. Eles cobrem as regras 2, 4 e 5 e a regra de arquitetura
+(ArchUnit: controllers não acessam repositórios).
 
 Para testar os endpoints à mão, use o arquivo `docs/requisicoes.http` com a extensão
 REST Client do VS Code.
 
 ### 4. SPA
 
-Em construção.
+Com a API rodando, em outro terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+A SPA abre em `http://localhost:5173` (no Codespaces, pela aba **Portas**, porta 5173).
+Em desenvolvimento ela chama `/api` no próprio Vite, que repassa para a API na porta 8080
+(proxy em `vite.config.js`). Por isso funciona igual no computador e no Codespaces.
+
+### CORS
+
+A API libera o acesso do navegador apenas para a origem da SPA, definida em
+`app.cors.origem` (padrão `http://localhost:5173`). Para outra origem, defina a variável
+de ambiente `CORS_ORIGEM` antes de subir a API.
 
 ## Identidade simulada
 
@@ -105,14 +122,15 @@ id, então isso serve só para demonstração.
 - [x] CRUD de usuários, projetos, histórias, cenários e passos (regras 1, 2 e 3)
 - [x] Tratamento de erros padronizado com ProblemDetail
 - [x] Identidade simulada pelo cabeçalho `X-Usuario-Id`
-- [ ] Sugestões: registro, aceitação e rejeição (regra 4)
-- [ ] Exportação `.feature` (regra 5)
+- [x] Sugestões: registro, aceitação e rejeição (regra 4)
+- [x] Exportação `.feature` (regra 5)
 - [x] Lista de histórias do projeto com filtro por prioridade (regra 6)
-- [ ] Resumo do projeto (regra 7)
-- [x] Teste da gramática do cenário (regra 2)
-- [ ] Demais testes de regras e teste ArchUnit
-- [x] Documentação dos endpoints (parcial, atualizada a cada etapa)
-- [ ] SPA
+- [x] Resumo do projeto (regra 7)
+- [x] Testes de regras (cenário sem Então, rejeição sem motivo, exportação com pendência) e teste ArchUnit
+- [x] Documentação dos endpoints
+- [x] CORS liberado só para a origem da SPA
+- [x] SPA: seleção de usuário, projetos e histórias com filtro
+- [ ] SPA: edição de história e cenários, sugestões, exportação e resumo
 - [ ] Roteiro de verificação
 
 ## Documentação

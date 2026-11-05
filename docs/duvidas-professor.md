@@ -12,6 +12,8 @@ implementou enquanto não tem a resposta.
 | 5 | O que fazer ao excluir um projeto que tem histórias? | Bloquear a exclusão com mensagem |
 | 6 | Quem pode editar um projeto? A regra 3 fala só de histórias e cenários | Qualquer usuário |
 | 7 | O e-mail e os títulos devem ser únicos ignorando maiúsculas e minúsculas? | Sim |
+| 8 | Quem pode registrar e decidir sugestões? O enunciado não restringe | Qualquer usuário; a API guarda quem registrou e quem decidiu |
+| 9 | O motivo OUTRO deve exigir justificativa? | Não; a justificativa é sempre opcional |
 
 ## Respostas
 
