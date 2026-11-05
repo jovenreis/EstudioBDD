@@ -1,0 +1,311 @@
+/* Visual de quadro branco com fichas de história (index cards):
+   fundo cinza-azulado, fichas brancas pautadas e cores de pincel para a prioridade. */
+
+:root {
+  --fundo: #e9edf1;
+  --superficie: #ffffff;
+  --tinta: #1d2a36;
+  --tinta-suave: #5a6878;
+  --linha: #cbd4dd;
+  --azul: #2557c7;
+  --pauta: #e3ebf4;
+  --margem: #e3797a;
+
+  --alta: #b42318;
+  --media: #9a5b00;
+  --baixa: #2e6b45;
+
+  --fonte: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --fonte-titulo: 'Fraunces', Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--tinta);
+  font-family: var(--fonte);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--azul);
+}
+
+:focus-visible {
+  outline: 3px solid var(--azul);
+  outline-offset: 2px;
+}
+
+/* topo */
+
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--linha);
+}
+
+.marca {
+  font-family: var(--fonte-titulo);
+  font-size: 22px;
+  color: var(--tinta);
+  text-decoration: none;
+}
+
+.seletor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--tinta-suave);
+}
+
+.seletor select {
+  font: inherit;
+  color: var(--tinta);
+  padding: 6px 10px;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--superficie);
+}
+
+/* estrutura */
+
+.corpo {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.lateral-titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tinta-suave);
+  margin-bottom: 8px;
+}
+
+.projetos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.projetos a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--tinta);
+  text-decoration: none;
+}
+
+.projetos a:hover {
+  background: rgba(37, 87, 199, 0.08);
+}
+
+.projetos a.active {
+  background: var(--superficie);
+  box-shadow: inset 3px 0 0 var(--azul);
+  font-weight: 700;
+}
+
+/* textos */
+
+.inicio {
+  max-width: 60ch;
+  display: grid;
+  gap: 12px;
+}
+
+h1 {
+  font-family: var(--fonte-titulo);
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.aviso {
+  color: var(--tinta-suave);
+}
+
+.erro-texto {
+  color: var(--alta);
+}
+
+/* projeto */
+
+.projeto-cabecalho {
+  display: grid;
+  gap: 8px;
+  max-width: 70ch;
+  margin-bottom: 24px;
+}
+
+.descricao {
+  color: var(--tinta-suave);
+}
+
+.glossario summary {
+  cursor: pointer;
+  color: var(--azul);
+  font-size: 14px;
+}
+
+.glossario p {
+  margin-top: 8px;
+  padding-left: 12px;
+  border-left: 2px solid var(--linha);
+  font-size: 15px;
+}
+
+.filtro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.filtro button {
+  font: inherit;
+  font-size: 14px;
+  padding: 6px 14px;
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  background: var(--superficie);
+  color: var(--tinta);
+  cursor: pointer;
+}
+
+.filtro button.ativo {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--superficie);
+}
+
+/* fichas de história */
+
+.historias {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.cartao {
+  --cor-prioridade: var(--tinta-suave);
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px 18px;
+  background: var(--superficie);
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(29, 42, 54, 0.12), 0 6px 14px -8px rgba(29, 42, 54, 0.25);
+}
+
+.prioridade-alta {
+  --cor-prioridade: var(--alta);
+}
+
+.prioridade-media {
+  --cor-prioridade: var(--media);
+}
+
+.prioridade-baixa {
+  --cor-prioridade: var(--baixa);
+}
+
+/* cabeçalho da ficha com a linha vermelha das fichas de papel */
+.cartao-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--margem);
+}
+
+.cartao h3 {
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.prioridade {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cor-prioridade);
+  padding: 2px 10px;
+  border: 2px solid var(--cor-prioridade);
+  border-radius: 999px;
+}
+
+/* corpo da ficha pautado: cada linha de texto fica sobre uma linha azul de 24px */
+.cartao-corpo {
+  line-height: 24px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 23px,
+    var(--pauta) 23px,
+    var(--pauta) 24px
+  );
+}
+
+.autor {
+  font-size: 14px;
+  color: var(--tinta-suave);
+}
+
+.contagens {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+}
+
+.tem-pendencia {
+  color: var(--media);
+  font-weight: 700;
+}
+
+/* celular */
+
+@media (max-width: 720px) {
+  .topo {
+    padding: 12px 16px;
+  }
+
+  .corpo {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 16px 48px;
+  }
+
+  .projetos {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+  }
+
+  .projetos a {
+    white-space: nowrap;
+  }
+
+  .seletor > span {
+    display: none;
+  }
+}
