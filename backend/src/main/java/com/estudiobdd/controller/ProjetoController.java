@@ -2,8 +2,10 @@ package com.estudiobdd.controller;
 
 import com.estudiobdd.dto.ProjetoRequest;
 import com.estudiobdd.dto.ProjetoResponse;
+import com.estudiobdd.dto.ResumoProjetoResponse;
 import com.estudiobdd.model.Projeto;
 import com.estudiobdd.service.ProjetoService;
+import com.estudiobdd.service.ResumoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,9 +25,11 @@ import java.util.List;
 public class ProjetoController {
 
     private final ProjetoService projetoService;
+    private final ResumoService resumoService;
 
-    public ProjetoController(ProjetoService projetoService) {
+    public ProjetoController(ProjetoService projetoService, ResumoService resumoService) {
         this.projetoService = projetoService;
+        this.resumoService = resumoService;
     }
 
     @GetMapping
@@ -36,6 +40,12 @@ public class ProjetoController {
     @GetMapping("/{id}")
     public ProjetoResponse buscar(@PathVariable Long id) {
         return ProjetoResponse.de(projetoService.buscar(id));
+    }
+
+    // regra 7
+    @GetMapping("/{id}/resumo")
+    public ResumoProjetoResponse resumo(@PathVariable Long id) {
+        return ResumoProjetoResponse.de(resumoService.gerar(id));
     }
 
     @PostMapping

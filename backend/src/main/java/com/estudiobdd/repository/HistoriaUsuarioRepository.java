@@ -14,6 +14,8 @@ public interface HistoriaUsuarioRepository extends JpaRepository<HistoriaUsuario
 
     boolean existsByProjetoId(Long projetoId);
 
+    long countByProjetoId(Long projetoId);
+
     List<HistoriaUsuario> findByProjetoIdOrderByTituloAsc(Long projetoId);
 
     List<HistoriaUsuario> findByProjetoIdAndPrioridadeOrderByTituloAsc(Long projetoId, Prioridade prioridade);
