@@ -77,6 +77,10 @@ public class Sugestao {
         registradaEm = LocalDateTime.now();
     }
 
+    public boolean isPendente() {
+        return decisao == DecisaoSugestao.PENDENTE;
+    }
+
     public Long getId() {
         return id;
     }
