@@ -10,6 +10,7 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 | 4 | API | 30/10/2026 | Núcleo da API (Semana 2) |
 | 5 | API | 30/10/2026 | Sugestões, exportação, resumo e testes |
 | 6 | SPA | 30/10/2026 | Início da SPA |
+| 7 | API | 03/11/2026 | Entendimento dos enums do domínio |
 
 ---
 
@@ -105,9 +106,26 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
   com pendência), `ResumoService` (contagens com consultas derivadas do Spring Data), CORS
   limitado à origem da SPA, `SugestaoServiceTest` e `ExportacaoServiceTest` com Mockito e
   `ArquiteturaTest` com ArchUnit.
-- **Decisão do grupo:** _(preencher depois de testar)_
-- **Mudanças realizadas:** _(preencher)_
-- **Verificação:** `mvn test` e as requisições das regras 4, 5 e 7 em `requisicoes.http`.
+- **Decisão do grupo:** aceitamos a proposta depois de rodar os testes e todas as requisições
+  das regras 4, 5 e 7. Na primeira tentativa, a exportação da história 1 respondeu 200, quando
+  esperávamos 422. Perguntamos à IA e entendemos que não era defeito: a sugestão 1 da carga
+  inicial já tinha sido aceita em um teste anterior, e uma sugestão decidida não volta a ficar
+  pendente (regra 4). Zeramos o banco (`docker compose down -v`) e refizemos as requisições na
+  ordem. Também notamos que a "rejeição sem motivo" devolveu 422 pelo motivo errado ("já foi
+  aceita"), porque o serviço primeiro verifica se a sugestão está pendente e só depois exige o
+  motivo. Refizemos esse teste com uma sugestão nova (id 3) e obtivemos a mensagem correta
+  ("Informe o motivo da rejeição"). Ao enviar duas vezes a rejeição da sugestão 2, a segunda
+  resposta foi 422 ("já foi rejeitada"), o que confirmou o bloqueio de alteração de sugestão
+  decidida. Mantivemos a ordem das verificações no serviço.
+- **Mudanças realizadas:** nenhuma no código proposto. Geramos `docs/login.feature` com a
+  exportação da própria API (`curl .../api/historias/1/feature`). A sugestão 3, repetida, foi
+  rejeitada com o motivo DUPLICADA. Marcamos a versão como `api-completa`.
+- **Verificação:** `mvn test` com 18 testes passando (9 da regra 2, 4 de sugestões, 4 de
+  exportação e 1 do ArchUnit). Pelas requisições: exportação bloqueada com sugestão pendente
+  (422), rejeição sem motivo bloqueada (422), alteração de sugestão decidida bloqueada (422),
+  `.feature` gerado depois de decidir as sugestões (200) e resumo coerente com os dados
+  (2 histórias, 3 cenários HUMANO, 1 aceita, 1 rejeitada com motivo GENERICA). Prints em
+  `docs/evidencias/`.
 
 ## 6. Início da SPA (Semana 3)
 
@@ -120,7 +138,30 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 - **Proposta da IA:** `api.js` centralizando as chamadas e o cabeçalho `X-Usuario-Id`;
   `UsuarioContext` para o usuário escolhido; telas de projetos e histórias com o filtro enviado
   à API; proxy do Vite para `/api`, porque no Codespaces cada porta tem um endereço diferente.
-- **Decisão do grupo:** _(preencher depois de testar)_
-- **Mudanças realizadas:** _(preencher)_
+- **Decisão do grupo:** aceitamos a proposta. A IA explicou que, no Codespaces, a SPA (porta
+  5173) e a API (porta 8080) ficam em endereços diferentes, então a SPA chama `/api` no próprio
+  Vite, que repassa para a API. O CORS da API continua limitado à origem da SPA, como pede o
+  enunciado. Abrimos a SPA pela aba Portas, trocamos o usuário no topo e usamos o
+  filtro de prioridade no projeto "Loja".
+- **Mudanças realizadas:** nenhuma no código proposto.
 - **Verificação:** `npm run dev`, troca de usuário no topo, lista de projetos e filtro por
   prioridade mostrando os dados reais do banco.
+
+## 7. Entendimento dos enums do domínio
+
+- **Ferramenta:** Claude (Anthropic)
+- **Problema:** entender de onde vinham `TipoPasso.DADO`, `TipoPasso.QUANDO` etc. no
+  `DadosIniciais`, por que o projeto tem vários enums e por que usar enum em vez de texto.
+- **Prompt (resumo):** "de onde vem o TipoPasso.DADO?", "por que fez vários enums?" e
+  "mas por que o enum?".
+- **Proposta da IA:** explicou que os cinco enums (`Prioridade`, `OrigemCenario`, `TipoPasso`,
+  `DecisaoSugestao`, `MotivoRejeicao`) vêm dos atributos com valores fixos da seção 3 do
+  enunciado. Comparou enum com `String` e com `int`: o enum impede valores inválidos já na
+  compilação, a API recusa valores fora da lista com 400, e o valor pode carregar dados e
+  comportamento (`TipoPasso.ENTAO` guarda "Então" e o método `isContinuacao()`). Também
+  explicou o `@Enumerated(EnumType.STRING)`, que guarda o nome no banco em vez da posição.
+- **Decisão do grupo:** mantivemos os enums. Uma tabela no banco só faria sentido se os valores
+  mudassem com o sistema rodando, o que não é o caso.
+- **Mudanças realizadas:** nenhuma.
+- **Verificação:** conferimos na seção 3 do enunciado que os cinco atributos têm listas fixas, e
+  vimos no banco que a coluna `tipo` da tabela `passo` guarda os nomes (`DADO`, `QUANDO`...).
