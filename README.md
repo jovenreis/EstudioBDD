@@ -14,7 +14,7 @@ com ferramentas de IA e exportar as histórias como arquivos `.feature`.
 
 ## Tecnologias
 
-- API: Java 21, Spring Boot 3.5, Spring Data JPA, Bean Validation
+- API: Java 21, Spring Boot 3.5.16, Spring Data JPA, Bean Validation
 - Banco: PostgreSQL 16 (via Docker Compose)
 - SPA: React 18 + Vite 5 + React Router (pasta `frontend/`)
 
@@ -99,6 +99,17 @@ npm run dev
 ```
 
 A SPA abre em `http://localhost:5173` (no Codespaces, pela aba **Portas**, porta 5173).
+
+Telas:
+
+| Caminho | Tela |
+|---|---|
+| `/` | Início, com a seleção do usuário de demonstração no topo |
+| `/projetos/:id` | Histórias do projeto, com filtro por prioridade |
+| `/projetos/:id/historias/nova` | Nova história |
+| `/projetos/:id/resumo` | Resumo do projeto |
+| `/historias/:id` | História com os cenários (edição dos passos), exportação do `.feature` e sugestões ao lado |
+| `/historias/:id/editar` | Edição da história |
 Em desenvolvimento ela chama `/api` no próprio Vite, que repassa para a API na porta 8080
 (proxy em `vite.config.js`). Por isso funciona igual no computador e no Codespaces.
 
@@ -130,8 +141,8 @@ id, então isso serve só para demonstração.
 - [x] Documentação dos endpoints
 - [x] CORS liberado só para a origem da SPA
 - [x] SPA: seleção de usuário, projetos e histórias com filtro
-- [ ] SPA: edição de história e cenários, sugestões, exportação e resumo
-- [ ] Roteiro de verificação
+- [x] SPA: edição de história e cenários, sugestões, exportação e resumo
+- [x] Roteiro de verificação
 
 ## Documentação
 
@@ -142,3 +153,5 @@ id, então isso serve só para demonstração.
 - [Registro de IA](docs/registro-ia.md)
 - [História e cenários iniciais](docs/cenarios-iniciais.md)
 - [Dúvidas para o professor](docs/duvidas-professor.md)
+- [Roteiro de verificação](docs/roteiro-verificacao.md)
+- [Arquivo .feature exportado pelo sistema](docs/login.feature)

@@ -47,6 +47,9 @@ cd frontend && npm install && npm run dev
 - A SPA não valida regra de negócio: mostra a mensagem que a API devolveu.
 - Filtros (como prioridade) são enviados para a API, não aplicados no navegador.
 - O usuário de demonstração fica em `UsuarioContext.jsx`.
+- Erros da API são exibidos com `components/MensagemErro.jsx`. A SPA não esconde ações de quem
+  não é autor: a API recusa com 403 e a mensagem aparece na tela.
+- Textos dos enums na tela ficam em `src/rotulos.js`.
 
 ## Convenções
 

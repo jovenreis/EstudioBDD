@@ -11,6 +11,8 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 | 5 | API | 30/10/2026 | Sugestões, exportação, resumo e testes |
 | 6 | SPA | 30/10/2026 | Início da SPA |
 | 7 | API | 03/11/2026 | Entendimento dos enums do domínio |
+| 8 | API | 05/11/2026 | Avisos do editor e atualização do Spring Boot |
+| 9 | SPA | 05/11/2026 | Telas da SPA (Semana 4) |
 
 ---
 
@@ -165,3 +167,38 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 - **Mudanças realizadas:** nenhuma.
 - **Verificação:** conferimos na seção 3 do enunciado que os cinco atributos têm listas fixas, e
   vimos no banco que a coluna `tipo` da tabela `passo` guarda os nomes (`DADO`, `QUANDO`...).
+
+## 8. Avisos do editor e atualização do Spring Boot
+
+- **Ferramenta:** Claude (Anthropic)
+- **Problema:** o VS Code mostrava pontos e um número vermelho em vários arquivos. Ficamos em
+  dúvida se o projeto tinha erros.
+- **Prompt (resumo):** enviamos a lista do painel Problems.
+- **Proposta da IA:** explicou que não havia nenhum erro, só avisos: versão de correção mais
+  nova do Spring Boot (3.5.16), fim do suporte gratuito da linha 3.5, `pom.xml` alterado sem
+  recarregar, análise de nulos da extensão Java ("Null type safety") e uma sugestão de estilo
+  sobre o caminho `/api`. Sugeriu atualizar só a versão de correção e não migrar para o Spring
+  Boot 4 a uma semana da entrega.
+- **Decisão do grupo:** atualizamos para a 3.5.16. Mantivemos a linha 3.5 e ignoramos os avisos
+  de nulos e de estilo, porque não são erros de compilação.
+- **Mudanças realizadas:** `backend/pom.xml` (versão do Spring Boot 3.5.6 → 3.5.16).
+- **Verificação:** os avisos de versão nova e de `pom.xml` alterado sumiram; `mvn test` continuou
+  com 18 testes passando e a API subiu normalmente.
+
+## 9. Telas da SPA (Semana 4)
+
+- **Parte:** SPA
+- **Ferramenta:** Claude (Anthropic)
+- **Problema:** construir as telas que faltavam: edição da história e dos cenários com os passos
+  ordenados, registro e decisão de sugestões ao lado da história, exportação do `.feature` e
+  resumo do projeto.
+- **Prompt (resumo):** pedimos as telas mínimas da seção 8, mantendo as regras de negócio no
+  backend.
+- **Proposta da IA:** editor de cenário com botões para subir, descer e remover passos (a lista
+  é enviada inteira para a API); painel de sugestões ao lado da história, com filtro por decisão
+  e motivo obrigatório escolhido numa lista; exportação que mostra o texto e oferece o download;
+  resumo com barras; `MensagemErro` mostrando o `detail` e os campos inválidos devolvidos pela
+  API. A SPA não esconde botões de quem não é autor: a recusa (403) vem da API e aparece na tela.
+- **Decisão do grupo:** _(preencher depois de testar)_
+- **Mudanças realizadas:** _(preencher)_
+- **Verificação:** execução do roteiro em `docs/roteiro-verificacao.md` pela SPA.
