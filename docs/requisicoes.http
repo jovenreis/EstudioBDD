@@ -5,6 +5,26 @@
 
 @api = http://localhost:8080/api
 
+### --- Login ---
+
+### Login correto -> 200 com {id, nome, email}
+POST {{api}}/login
+Content-Type: application/json
+
+{ "email": "ana.souza@exemplo.com", "senha": "senha123" }
+
+### Senha errada -> 401
+POST {{api}}/login
+Content-Type: application/json
+
+{ "email": "ana.souza@exemplo.com", "senha": "errada" }
+
+### Cadastrar usuário com senha -> 201 (a resposta não traz a senha)
+POST {{api}}/usuarios
+Content-Type: application/json
+
+{ "nome": "Diego Alves", "email": "diego.alves@exemplo.com", "senha": "senha123" }
+
 ### Lista os usuários
 GET {{api}}/usuarios
 

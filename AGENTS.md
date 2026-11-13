@@ -14,7 +14,7 @@ negócio estão resumidas abaixo.
 ```bash
 docker compose up -d          # banco (raiz do repositório)
 cd backend && mvn spring-boot:run
-cd backend && mvn test        # testes de regras (2, 4 e 5) + ArchUnit
+cd backend && mvn test        # testes de regras (2, 4 e 5), login + ArchUnit
 cd frontend && npm install && npm run dev
 ```
 
@@ -46,7 +46,7 @@ cd frontend && npm install && npm run dev
   ProblemDetail em `ErroApi` com a mensagem (`detail`) da API.
 - A SPA não valida regra de negócio: mostra a mensagem que a API devolveu.
 - Filtros (como prioridade) são enviados para a API, não aplicados no navegador.
-- O usuário de demonstração fica em `UsuarioContext.jsx`.
+- O usuário logado fica em `UsuarioContext.jsx` (`entrar`, `sair`); sem login, `App.jsx` mostra só a `LoginPagina`.
 - Erros da API são exibidos com `components/MensagemErro.jsx`. A SPA não esconde ações de quem
   não é autor: a API recusa com 403 e a mensagem aparece na tela.
 - Textos dos enums na tela ficam em `src/rotulos.js`.
@@ -57,7 +57,9 @@ cd frontend && npm install && npm run dev
   (`HistoriaUsuario`, `Cenario`, `ENTAO`).
 - Sem Lombok: getters e setters escritos à mão.
 - Mensagens de erro claras para o usuário final (ex.: "O cenário precisa ter ao menos um passo Então").
-- Usuário atual vem do cabeçalho `X-Usuario-Id`.
+- Usuário atual vem do cabeçalho `X-Usuario-Id`, definido pela SPA depois do `POST /api/login`.
+- Senhas: só `PasswordEncoder` (BCrypt, `config/SenhaConfig`). Nunca salvar nem devolver senha em texto;
+  DTOs de resposta não têm campo de senha. Login inválido lança `CredenciaisInvalidasException` (401).
 
 ## Regras de negócio
 

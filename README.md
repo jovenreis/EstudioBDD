@@ -14,7 +14,7 @@ com ferramentas de IA e exportar as histórias como arquivos `.feature`.
 
 ## Tecnologias
 
-- API: Java 21, Spring Boot 3.5.16, Spring Data JPA, Bean Validation
+- API: Java 21, Spring Boot 3.5.16, Spring Data JPA, Bean Validation, BCrypt (spring-security-crypto)
 - Banco: PostgreSQL 16 (via Docker Compose)
 - SPA: React 18 + Vite 5 + React Router (pasta `frontend/`)
 
@@ -82,8 +82,8 @@ cd backend
 mvn test
 ```
 
-Os testes não precisam do banco. Eles cobrem as regras 2, 4 e 5 e a regra de arquitetura
-(ArchUnit: controllers não acessam repositórios).
+Os testes não precisam do banco. Eles cobrem as regras 2, 4 e 5, o login e a regra de
+arquitetura (ArchUnit: controllers não acessam repositórios).
 
 Para testar os endpoints à mão, use o arquivo `docs/requisicoes.http` com a extensão
 REST Client do VS Code.
@@ -104,7 +104,8 @@ Telas:
 
 | Caminho | Tela |
 |---|---|
-| `/` | Início, com a seleção do usuário de demonstração no topo |
+| (sem login) | Tela de login |
+| `/` | Início; o topo mostra o usuário logado e o botão Sair |
 | `/projetos/:id` | Histórias do projeto, com filtro por prioridade |
 | `/projetos/:id/historias/nova` | Nova história |
 | `/projetos/:id/resumo` | Resumo do projeto |
@@ -119,11 +120,24 @@ A API libera o acesso do navegador apenas para a origem da SPA, definida em
 `app.cors.origem` (padrão `http://localhost:5173`). Para outra origem, defina a variável
 de ambiente `CORS_ORIGEM` antes de subir a API.
 
-## Identidade simulada
+## Login e identidade
 
-A API não tem autenticação. O usuário atual é informado pelo cabeçalho `X-Usuario-Id`
-nas operações que alteram histórias e cenários, e os serviços usam esse valor para validar a autoria (regra 3). Qualquer cliente pode enviar qualquer
-id, então isso serve só para demonstração.
+A SPA começa por uma tela de login com e-mail e senha.
+
+- A senha é guardada no banco só como **hash BCrypt** (coluna `senha_hash`), nunca em texto.
+- `POST /api/login` confere o e-mail e a senha e devolve o usuário. E-mail inexistente e senha
+  errada recebem a mesma mensagem, para não revelar quais e-mails estão cadastrados.
+- Depois do login, a SPA envia o id do usuário no cabeçalho `X-Usuario-Id`, e os serviços usam
+  esse valor para validar a autoria (regra 3).
+
+**Limitação:** não há token nem sessão. A senha é verificada só no login; as demais rotas
+continuam confiando no cabeçalho `X-Usuario-Id`, que qualquer cliente pode enviar. É a
+identidade simulada pedida no enunciado, com uma tela de login na frente. Para um sistema
+real, o próximo passo seria usar Spring Security com um token (por exemplo, JWT) validado em
+todas as requisições.
+
+Contas de demonstração (dados fictícios), todas com a senha `senha123`:
+`ana.souza@exemplo.com`, `carlos.lima@exemplo.com` e `beatriz.rocha@exemplo.com`.
 
 ## Tarefas previstas
 
@@ -133,6 +147,7 @@ id, então isso serve só para demonstração.
 - [x] CRUD de usuários, projetos, histórias, cenários e passos (regras 1, 2 e 3)
 - [x] Tratamento de erros padronizado com ProblemDetail
 - [x] Identidade simulada pelo cabeçalho `X-Usuario-Id`
+- [x] Tela de login com e-mail e senha (senha com hash BCrypt)
 - [x] Sugestões: registro, aceitação e rejeição (regra 4)
 - [x] Exportação `.feature` (regra 5)
 - [x] Lista de histórias do projeto com filtro por prioridade (regra 6)

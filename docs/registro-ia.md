@@ -13,6 +13,7 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 | 7 | API | 03/11/2026 | Entendimento dos enums do domínio |
 | 8 | API | 05/11/2026 | Avisos do editor e atualização do Spring Boot |
 | 9 | SPA | 05/11/2026 | Telas da SPA (Semana 4) |
+| 10 | SPA | 13/11/2026 | Tela de login com e-mail e senha |
 
 ---
 
@@ -202,3 +203,27 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 - **Decisão do grupo:** _(preencher depois de testar)_
 - **Mudanças realizadas:** _(preencher)_
 - **Verificação:** execução do roteiro em `docs/roteiro-verificacao.md` pela SPA.
+
+## 10. Tela de login com e-mail e senha
+
+- **Parte:** SPA e API
+- **Ferramenta:** Claude (Anthropic)
+- **Problema:** na aula de acompanhamento, o professor perguntou por que o sistema não tinha uma
+  página de login, já que a troca de usuário era feita por uma lista no topo da tela.
+  Respondemos que o enunciado pede só a identidade simulada, e ele concordou, mas comentou que
+  seria bom ter um login.
+- **Prompt (resumo):** perguntamos se era possível criar uma página de login.
+- **Proposta da IA:** apresentou três opções: login de demonstração sem senha, login com e-mail
+  e senha (hash BCrypt, sem token) e autenticação completa com Spring Security e token. Alertou
+  que a terceira mudaria a API, os testes e a SPA inteiros a quatro dias da entrega.
+- **Decisão do grupo:** escolhemos o login com e-mail e senha. A senha fica só como hash BCrypt
+  (`spring-security-crypto`, sem ativar o Spring Security inteiro); `POST /api/login` responde
+  401 com a mesma mensagem para e-mail inexistente e senha errada; depois do login a SPA continua
+  usando o `X-Usuario-Id`. Documentamos no README que, sem token, as demais rotas ainda confiam
+  no cabeçalho.
+- **Mudanças realizadas:** `Usuario.senhaHash`, `config/SenhaConfig`, `LoginController`,
+  `UsuarioService.autenticar`, `CredenciaisInvalidasException` (401), senha nos dados fictícios,
+  `UsuarioServiceTest`; na SPA, `LoginPagina`, `UsuarioLogado` (nome e botão Sair) e
+  `UsuarioContext` com `entrar` e `sair`, no lugar da lista de usuários.
+- **Verificação:** `mvn test` _(confirmar: 22 testes)_ e os itens 25 a 30 do roteiro de
+  verificação: senha errada recusada, login correto, Sair e senha guardada como hash no banco.

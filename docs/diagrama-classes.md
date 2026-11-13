@@ -10,6 +10,7 @@ classDiagram
         Long id
         String nome
         String email
+        String senhaHash
     }
 
     class Projeto {
@@ -106,6 +107,8 @@ classDiagram
   cenário apaga os passos; tirar um passo da lista também o apaga do banco.
 - **Ordenação**: `Cenario` e `Passo` têm o campo `posicao`, e as coleções usam
   `@OrderBy("posicao ASC")`, então sempre voltam do banco na ordem certa.
+- **Senha**: `Usuario.senhaHash` guarda só o hash BCrypt. A senha em texto nunca é salva
+  nem devolvida pela API.
 - **Unicidade simples**: `Usuario.email` e `Projeto.nome` têm `unique = true`.
 - **Unicidade composta**: o título da história é único por projeto
   (`uk_historia_titulo_projeto`) e o título do cenário é único por história

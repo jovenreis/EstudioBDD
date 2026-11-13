@@ -3,13 +3,19 @@
 Base: `http://localhost:8080`. As operações marcadas com * exigem o cabeçalho
 `X-Usuario-Id` (identidade simulada, ver README).
 
+## Login
+
+| Método | Caminho | Descrição | Respostas |
+|---|---|---|---|
+| POST | `/api/login` | Confere `{email, senha}` e devolve `{id, nome, email}`. A SPA passa a enviar esse `id` no `X-Usuario-Id` | 200, 400, 401 ("E-mail ou senha incorretos") |
+
 ## Usuários
 
 | Método | Caminho | Descrição | Respostas |
 |---|---|---|---|
 | GET | `/api/usuarios` | Lista os usuários (para a seleção na SPA) | 200 |
 | GET | `/api/usuarios/{id}` | Busca um usuário | 200, 404 |
-| POST | `/api/usuarios` | Cadastra `{nome, email}` | 201, 400, 409 (e-mail repetido) |
+| POST | `/api/usuarios` | Cadastra `{nome, email, senha}` (senha de 6 a 72 caracteres, guardada como hash BCrypt; a resposta nunca traz a senha) | 201, 400, 409 (e-mail repetido) |
 
 ## Projetos
 
@@ -124,6 +130,7 @@ Erros de validação dos campos (400) trazem também `"erros": { "campo": "mensa
 | Status | Quando |
 |---|---|
 | 400 | Campo inválido, JSON mal formatado, cabeçalho `X-Usuario-Id` ausente |
+| 401 | Login com e-mail ou senha incorretos |
 | 403 | Usuário não é o autor da história |
 | 404 | Recurso não existe |
 | 409 | Valor que deveria ser único já existe |
