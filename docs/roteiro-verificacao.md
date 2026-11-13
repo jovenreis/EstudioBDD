@@ -72,17 +72,6 @@ serem decididas.
 | 21 | SPA: Loja, filtro "Alta" | — | Só as histórias de prioridade alta, com quantidade de cenários e de sugestões pendentes | Só a história "Login" apareceu, com 2 cenários e nenhuma sugestão pendente |  |
 | 22 | SPA: Loja → Ver resumo | — | Números iguais aos dados cadastrados (conferir contando na tela das histórias) | 3 histórias; cenários: 4 escritos pelo analista e 0 da IA; sugestões: 0 pendentes, 1 aceita, 1 rejeitada; motivo: Genérica (1). Números conferem com os dados cadastrados | semana4-resumo.png |
 
-## Login
-
-| # | Como verificar | Entrada | Esperado | Observado | Evidência |
-|---|---|---|---|---|---|
-| 25 | SPA: abrir sem estar logado | — | Aparece a tela de login; nenhuma outra tela abre | | |
-| 26 | SPA: tela de login | `ana.souza@exemplo.com` e senha `errada` | Recusado: "E-mail ou senha incorretos" (401) | | |
-| 27 | SPA: tela de login | `nao.existe@exemplo.com` e senha `senha123` | A mesma mensagem do item 26 (não revela se o e-mail existe) | | |
-| 28 | SPA: tela de login | `ana.souza@exemplo.com` e senha `senha123` | Entra; o topo mostra "Ana Souza" e o botão Sair | | |
-| 29 | SPA: clicar em Sair | — | Volta para a tela de login | | |
-| 30 | Banco: `docker exec -it estudio-bdd-db psql -U estudio -d estudiobdd -c "select email, senha_hash from usuario"` | — | A coluna `senha_hash` mostra hashes começando com `$2a$`, nunca a senha em texto | | |
-
 ## Persistência
 
 | # | Como verificar | Entrada | Esperado | Observado | Evidência |
@@ -95,4 +84,15 @@ Na primeira execução (antes do login) foram 18 testes passando; com o login s�
 
 | # | Como verificar | Esperado | Observado | Evidência |
 |---|---|---|---|---|
-| 24 | `mvn test` | 22 testes, 0 falhas: cenário sem Então rejeitado, rejeição sem motivo, exportação com sugestão pendente e ArchUnit (controllers não acessam repositórios), além dos testes de login | | |
+| 24 | `mvn test` | 22 testes, 0 falhas: cenário sem Então rejeitado, rejeição sem motivo, exportação com sugestão pendente e ArchUnit (controllers não acessam repositórios), além dos testes de login | Tests run: 22, Failures: 0, Errors: 0; BUILD SUCCESS | semana4-mvn-test.png |
+
+## Login
+
+| # | Como verificar | Entrada | Esperado | Observado | Evidência |
+|---|---|---|---|---|---|
+| 25 | SPA: abrir sem estar logado | — | Aparece a tela de login; nenhuma outra tela abre | Abriu a tela de login; mesmo acessando /projetos/1 direto, nenhuma outra tela apareceu |  |
+| 26 | SPA: tela de login | `ana.souza@exemplo.com` e senha `errada` | Recusado: "E-mail ou senha incorretos" (401) | Recusado com "E-mail ou senha incorretos"; continuou na tela de login | semana4-login-senha-errada.png |
+| 27 | SPA: tela de login | `nao.existe@exemplo.com` e senha `senha123` | A mesma mensagem do item 26 (não revela se o e-mail existe) | Recusado com a mesma mensagem do item 26 ("E-mail ou senha incorretos") |  |
+| 28 | SPA: tela de login | `ana.souza@exemplo.com` e senha `senha123` | Entra; o topo mostra "Ana Souza" e o botão Sair | Entrou; o topo mostrou "Ana Souza" e o botão Sair; continuou logado depois do F5 | semana4-login-ok.png |
+| 29 | SPA: clicar em Sair | — | Volta para a tela de login | Voltou para a tela de login |  |
+| 30 | Banco: `docker exec -it estudio-bdd-db psql -U estudio -d estudiobdd -c "select email, senha_hash from usuario"` | — | A coluna `senha_hash` mostra hashes começando com `$2a$`, nunca a senha em texto | A coluna senha_hash mostrou hashes começando com "$2a$10$", diferentes entre si; a senha em texto não aparece | semana4-senha-hash.png |

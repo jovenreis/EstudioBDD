@@ -225,5 +225,5 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
   `UsuarioService.autenticar`, `CredenciaisInvalidasException` (401), senha nos dados fictícios,
   `UsuarioServiceTest`; na SPA, `LoginPagina`, `UsuarioLogado` (nome e botão Sair) e
   `UsuarioContext` com `entrar` e `sair`, no lugar da lista de usuários.
-- **Verificação:** `mvn test` _(confirmar: 22 testes)_ e os itens 25 a 30 do roteiro de
+- **Verificação:** `mvn test` 22 testes passando e os itens 25 a 30 do roteiro de
   verificação: senha errada recusada, login correto, Sair e senha guardada como hash no banco.
