@@ -1,48 +1,52 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { api, definirUsuario } from './api.js'
 
-// Guarda o usuário de demonstração escolhido. Ele vai no cabeçalho X-Usuario-Id
-// de todas as requisições (identidade simulada, não é login).
+// Guarda quem fez login. O id vai no cabeçalho X-Usuario-Id das requisições.
+// A senha é conferida só no login (POST /api/login); não existe token.
 
 const UsuarioContext = createContext(null)
 const CHAVE = 'estudio-bdd:usuario'
 
 function lerSalvo() {
   try {
-    return Number(localStorage.getItem(CHAVE)) || null
+    const salvo = JSON.parse(localStorage.getItem(CHAVE))
+    return salvo?.id ? salvo : null
   } catch {
     return null
   }
 }
 
+function salvar(usuario) {
+  try {
+    if (usuario) localStorage.setItem(CHAVE, JSON.stringify(usuario))
+    else localStorage.removeItem(CHAVE)
+  } catch {
+    // sem armazenamento no navegador, o login vale só até recarregar a página
+  }
+}
+
 export function UsuarioProvider({ children }) {
-  const [usuarios, setUsuarios] = useState([])
-  const [usuarioId, setUsuarioId] = useState(lerSalvo)
-  const [erro, setErro] = useState(null)
+  const [usuario, setUsuario] = useState(() => {
+    const salvo = lerSalvo()
+    definirUsuario(salvo?.id ?? null)
+    return salvo
+  })
 
-  useEffect(() => {
-    api.usuarios()
-      .then((lista) => {
-        setUsuarios(lista)
-        // se o usuário salvo não existe mais, começa pelo primeiro da lista
-        setUsuarioId((atual) => (lista.some((u) => u.id === atual) ? atual : lista[0]?.id ?? null))
-      })
-      .catch((e) => setErro(e.message))
-  }, [])
+  async function entrar(email, senha) {
+    const logado = await api.login(email, senha)
+    definirUsuario(logado.id)
+    salvar(logado)
+    setUsuario(logado)
+  }
 
-  useEffect(() => {
-    definirUsuario(usuarioId)
-    try {
-      if (usuarioId) localStorage.setItem(CHAVE, String(usuarioId))
-    } catch {
-      // sem armazenamento no navegador a escolha vale só nesta aba
-    }
-  }, [usuarioId])
-
-  const usuario = usuarios.find((u) => u.id === usuarioId) ?? null
+  function sair() {
+    definirUsuario(null)
+    salvar(null)
+    setUsuario(null)
+  }
 
   return (
-    <UsuarioContext.Provider value={{ usuarios, usuario, setUsuarioId, erro }}>
+    <UsuarioContext.Provider value={{ usuario, entrar, sair }}>
       {children}
     </UsuarioContext.Provider>
   )

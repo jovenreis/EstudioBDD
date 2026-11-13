@@ -1,18 +1,25 @@
 import { NavLink, Route, Routes } from 'react-router-dom'
-import SeletorUsuario from './components/SeletorUsuario.jsx'
+import UsuarioLogado from './components/UsuarioLogado.jsx'
 import ListaProjetos from './components/ListaProjetos.jsx'
 import Inicio from './pages/Inicio.jsx'
 import ProjetoPagina from './pages/ProjetoPagina.jsx'
 import HistoriaPagina from './pages/HistoriaPagina.jsx'
 import HistoriaForm from './pages/HistoriaForm.jsx'
 import ResumoPagina from './pages/ResumoPagina.jsx'
+import LoginPagina from './pages/LoginPagina.jsx'
+import { useUsuario } from './UsuarioContext.jsx'
 
 export default function App() {
+  const { usuario } = useUsuario()
+
+  // sem login, só a tela de entrada aparece
+  if (!usuario) return <LoginPagina />
+
   return (
     <div className="app">
       <header className="topo">
         <NavLink to="/" className="marca">Estúdio BDD</NavLink>
-        <SeletorUsuario />
+        <UsuarioLogado />
       </header>
 
       <div className="corpo">

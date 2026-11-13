@@ -58,6 +58,7 @@ function nomeDoArquivo(cabecalho) {
 }
 
 export const api = {
+  login: (email, senha) => requisitar('POST', '/api/login', { email, senha }),
   usuarios: () => requisitar('GET', '/api/usuarios'),
 
   projetos: () => requisitar('GET', '/api/projetos'),

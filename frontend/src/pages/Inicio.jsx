@@ -7,8 +7,8 @@ export default function Inicio() {
         os cenários que descrevem o comportamento esperado em Dado / Quando / Então.
       </p>
       <p className="aviso">
-        O usuário escolhido no topo é só para demonstração: ele define quem é o autor do que
-        for criado e quem pode editar cada história.
+        Você é o autor das histórias que criar, e só o autor pode editar ou excluir uma história
+        e seus cenários.
       </p>
     </section>
   )
