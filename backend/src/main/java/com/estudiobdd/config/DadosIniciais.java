@@ -14,40 +14,53 @@ import com.estudiobdd.repository.UsuarioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Carrega dados fictícios para demonstração. Só roda quando o banco está vazio,
  * então reiniciar a aplicação não duplica nada.
+ * Todos os usuários de demonstração usam a senha SENHA_DEMO (dado fictício).
  */
 @Component
 public class DadosIniciais implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DadosIniciais.class);
+    static final String SENHA_DEMO = "senha123";
 
     private final UsuarioRepository usuarioRepository;
     private final ProjetoRepository projetoRepository;
     private final HistoriaUsuarioRepository historiaRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public DadosIniciais(UsuarioRepository usuarioRepository,
                          ProjetoRepository projetoRepository,
-                         HistoriaUsuarioRepository historiaRepository) {
+                         HistoriaUsuarioRepository historiaRepository,
+                         PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.projetoRepository = projetoRepository;
         this.historiaRepository = historiaRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    private Usuario usuarioDemo(String nome, String email) {
+        Usuario u = new Usuario(nome, email);
+        u.setSenhaHash(passwordEncoder.encode(SENHA_DEMO));
+        return usuarioRepository.save(u);
     }
 
     @Override
     @Transactional
     public void run(String... args) {
         if (usuarioRepository.count() > 0) {
+            definirSenhaDeQuemNaoTem();
             return;
         }
 
-        Usuario ana = usuarioRepository.save(new Usuario("Ana Souza", "ana.souza@exemplo.com"));
-        Usuario carlos = usuarioRepository.save(new Usuario("Carlos Lima", "carlos.lima@exemplo.com"));
-        usuarioRepository.save(new Usuario("Beatriz Rocha", "beatriz.rocha@exemplo.com"));
+        Usuario ana = usuarioDemo("Ana Souza", "ana.souza@exemplo.com");
+        Usuario carlos = usuarioDemo("Carlos Lima", "carlos.lima@exemplo.com");
+        usuarioDemo("Beatriz Rocha", "beatriz.rocha@exemplo.com");
 
         Projeto loja = projetoRepository.save(new Projeto(
                 "Loja",
@@ -95,5 +108,16 @@ public class DadosIniciais implements CommandLineRunner {
         historiaRepository.save(exportar);
 
         log.info("Dados de demonstração carregados: 3 usuários, 2 projetos, 3 histórias.");
+    }
+
+    // bancos criados antes do login existir têm usuários sem senha;
+    // eles recebem a senha de demonstração para conseguirem entrar
+    private void definirSenhaDeQuemNaoTem() {
+        for (Usuario u : usuarioRepository.findAll()) {
+            if (u.getSenhaHash() == null) {
+                u.setSenhaHash(passwordEncoder.encode(SENHA_DEMO));
+                log.info("Senha de demonstração definida para {}", u.getEmail());
+            }
+        }
     }
 }

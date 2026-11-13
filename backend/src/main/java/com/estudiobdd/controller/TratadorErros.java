@@ -2,6 +2,7 @@ package com.estudiobdd.controller;
 
 import com.estudiobdd.service.AcessoNegadoException;
 import com.estudiobdd.service.ConflitoException;
+import com.estudiobdd.service.CredenciaisInvalidasException;
 import com.estudiobdd.service.RecursoNaoEncontradoException;
 import com.estudiobdd.service.RegraNegocioException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -43,6 +44,11 @@ public class TratadorErros {
     @ExceptionHandler(AcessoNegadoException.class)
     public ProblemDetail acessoNegado(AcessoNegadoException e) {
         return problema(HttpStatus.FORBIDDEN, "Acesso negado", e.getMessage());
+    }
+
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ProblemDetail credenciaisInvalidas(CredenciaisInvalidasException e) {
+        return problema(HttpStatus.UNAUTHORIZED, "Login inválido", e.getMessage());
     }
 
     // falhas do Bean Validation nos DTOs: devolve a lista de campos com erro

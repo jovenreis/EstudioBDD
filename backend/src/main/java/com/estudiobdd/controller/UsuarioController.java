@@ -38,7 +38,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioResponse> criar(@Valid @RequestBody UsuarioRequest req) {
-        Usuario criado = usuarioService.criar(req.paraDominio());
+        Usuario criado = usuarioService.criar(req.paraDominio(), req.senha());
         return ResponseEntity.created(URI.create("/api/usuarios/" + criado.getId()))
                 .body(UsuarioResponse.de(criado));
     }

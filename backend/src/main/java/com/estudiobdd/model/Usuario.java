@@ -21,12 +21,24 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 160)
     private String email;
 
+    // só o hash BCrypt é guardado, nunca a senha em texto
+    @Column(name = "senha_hash", length = 100)
+    private String senhaHash;
+
     protected Usuario() {
     }
 
     public Usuario(String nome, String email) {
         this.nome = nome;
         this.email = email;
+    }
+
+    public String getSenhaHash() {
+        return senhaHash;
+    }
+
+    public void setSenhaHash(String senhaHash) {
+        this.senhaHash = senhaHash;
     }
 
     public Long getId() {
