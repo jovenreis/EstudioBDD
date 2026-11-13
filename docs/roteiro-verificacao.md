@@ -17,34 +17,34 @@ cd /workspaces/EstudioBDD/frontend && npm install && npm run dev   # SPA na 5173
 Dados fictícios: usuários 1 (Ana) e 2 (Carlos); projeto 1 "Loja" com as histórias
 "Login" (autora Ana, 2 cenários, 1 sugestão pendente) e "Adicionar ao carrinho" (autor Carlos).
 
-Executado em: ____/____/2026, por: ______________________
+Executado em: 13/11/2026, por: Bruno Martin Magalhãe, Henry Ribeiro Reis e Pedro Pizane Stach Ferreira
 
 ## Histórias (regra 1)
 
 | # | Como verificar | Entrada | Esperado | Observado | Evidência |
 |---|---|---|---|---|---|
-| 1 | SPA: Loja → Nova história | Título "Recuperar senha", Como "cliente", Quero "recuperar minha senha por e-mail", Para "voltar a acessar a loja" | História criada e aberta | | |
-| 2 | SPA: Loja → Nova história | Título "Login" (já existe no projeto) | Recusada: "Já existe uma história com o título "Login" neste projeto" (409) | | |
-| 3 | SPA: Loja → Nova história | Campo "Para" vazio | Recusada com o campo inválido listado (400) | | |
+| 1 | SPA: Loja → Nova história | Título "Recuperar senha", Como "cliente", Quero "recuperar minha senha por e-mail", Para "voltar a acessar a loja" | História criada e aberta | História criada; a página da história "Recuperar senha" abriu com a narrativa e "Autor: Ana Souza" |  |
+| 2 | SPA: Loja → Nova história | Título "Login" (já existe no projeto) | Recusada: "Já existe uma história com o título "Login" neste projeto" (409) | Recusada com a mensagem "Já existe uma história com o título "Login" neste projeto"; nada foi criado |  |
+| 3 | SPA: Loja → Nova história | Campo "Para" vazio | Recusada com o campo inválido listado (400) | Recusada com "Um ou mais campos estão inválidos" e o campo "Informe o benefício (para...)" listado |  |
 
 ## Cenários e passos (regra 2)
 
 | # | Como verificar | Entrada | Esperado | Observado | Evidência |
 |---|---|---|---|---|---|
-| 4 | SPA: história "Recuperar senha" → Novo cenário | Dado / Quando / Então preenchidos | Cenário salvo com os passos na ordem | | |
-| 5 | Idem | Passos Dado / Quando / E (sem Então) | Recusado: "O cenário precisa ter ao menos um passo Então" (422) | | |
-| 6 | Idem | Passos Dado / Então (sem Quando) | Recusado: "O cenário precisa ter ao menos um passo Quando" (422) | | |
-| 7 | Idem | Passos Dado / Então / Quando | Recusado: passo fora de ordem (422) | | |
-| 8 | Idem | Primeiro passo do tipo E | Recusado: "O cenário não pode começar com um passo E" (422) | | |
-| 9 | SPA: editar o cenário do item 4 | Adicionar um passo E e subir ele para antes do Então; salvar | Passos exibidos na nova ordem, inclusive depois de recarregar a página (F5) | | |
+| 4 | SPA: história "Recuperar senha" → Novo cenário | Dado / Quando / Então preenchidos | Cenário salvo com os passos na ordem | Cenário salvo e exibido com Dado, Quando e Então na ordem |  |
+| 5 | Idem | Passos Dado / Quando / E (sem Então) | Recusado: "O cenário precisa ter ao menos um passo Então" (422) | Recusado com "O cenário precisa ter ao menos um passo Então"; o cenário não foi salvo | semana4-cenario-invalido.png |
+| 6 | Idem | Passos Dado / Então (sem Quando) | Recusado: "O cenário precisa ter ao menos um passo Quando" (422) | Recusado com "O cenário precisa ter ao menos um passo Quando" |  |
+| 7 | Idem | Passos Dado / Então / Quando | Recusado: passo fora de ordem (422) | Recusado com a mensagem de passo fora de ordem (Dado → Quando → Então) |  |
+| 8 | Idem | Primeiro passo do tipo E | Recusado: "O cenário não pode começar com um passo E" (422) | Recusado com "O cenário não pode começar com um passo E" |  |
+| 9 | SPA: editar o cenário do item 4 | Adicionar um passo E e subir ele para antes do Então; salvar | Passos exibidos na nova ordem, inclusive depois de recarregar a página (F5) | Passos salvos como Dado, Quando, E, Então; a ordem se manteve depois do F5 | semana4-passos-reordenados.png |
 
 ## Autoria (regra 3)
 
 | # | Como verificar | Entrada | Esperado | Observado | Evidência |
 |---|---|---|---|---|---|
-| 10 | SPA: usuário "Carlos Lima", abrir "Login" (da Ana) → Editar história → Salvar | Qualquer alteração | Recusada: "Somente o autor da história pode alterá-la ou excluí-la" (403) | | |
-| 11 | SPA: usuário "Carlos Lima", "Login" → Excluir história → Confirmar | — | Recusada com a mesma mensagem (403) | | |
-| 12 | SPA: usuário "Carlos Lima", "Login" → Excluir um cenário | — | Recusada (403) | | |
+| 10 | SPA: usuário "Carlos Lima", abrir "Login" (da Ana) → Editar história → Salvar | Qualquer alteração | Recusada: "Somente o autor da história pode alterá-la ou excluí-la" (403) | Recusada com "Somente o autor da história pode alterá-la ou excluí-la"; a história não mudou | semana4-autoria.png |
+| 11 | SPA: usuário "Carlos Lima", "Login" → Excluir história → Confirmar | — | Recusada com a mesma mensagem (403) | Recusada com a mesma mensagem; a história continuou cadastrada |  |
+| 12 | SPA: usuário "Carlos Lima", "Login" → Excluir um cenário | — | Recusada (403) | Recusada com a mensagem de autoria; o cenário continuou cadastrado |  |
 
 ## Sugestões e exportação (regras 4 e 5)
 
@@ -53,30 +53,30 @@ serem decididas.
 
 | # | Como verificar | Entrada | Esperado | Observado | Evidência |
 |---|---|---|---|---|---|
-| 13 | SPA: "Login" → Registrar sugestão | Ferramenta, prompt e conteúdo | Sugestão aparece como Pendente; agora há 2 pendentes | | |
-| 14 | SPA: "Login" → Exportar .feature | — | Recusada: "A história tem 2 sugestões pendentes…" (422) | | |
-| 15 | SPA: a sugestão nova → Rejeitar → Confirmar rejeição | Sem escolher motivo | Recusada: "Informe o motivo da rejeição…" (422); continua Pendente | | |
-| 16 | Idem | Motivo "Genérica" | Sugestão passa a Rejeitada (Genérica) | | |
-| 17 | SPA: a sugestão da carga inicial → Aceitar → Confirmar aceite | Justificativa opcional | Sugestão passa a Aceita; os cenários da história não mudam | | |
-| 18 | `requisicoes.http`: "Alterar sugestão já decidida" | Rejeitar a sugestão 1, já aceita | Recusada: "A sugestão já foi aceita e não pode ser alterada" (422) | | |
-| 19 | SPA: projeto "Estúdio BDD" → "Exportar feature" (sem cenários) → Exportar .feature | — | Recusada: "A história precisa ter ao menos um cenário para ser exportada" (422) | | |
-| 20 | SPA: "Login", já sem pendências → Exportar .feature → Baixar arquivo | — | Texto em Gherkin com `# language: pt`, narrativa e cenários na ordem; arquivo `login.feature` baixado | | `docs/login.feature` |
+| 13 | SPA: "Login" → Registrar sugestão | Ferramenta, prompt e conteúdo | Sugestão aparece como Pendente; agora há 2 pendentes | Sugestão registrada como Pendente; a história passou a mostrar 2 sugestões pendentes |  |
+| 14 | SPA: "Login" → Exportar .feature | — | Recusada: "A história tem 2 sugestões pendentes…" (422) | Recusada com "A história tem 2 sugestões pendentes. Aceite ou rejeite antes de exportar" | semana4-exportacao-bloqueada.png |
+| 15 | SPA: a sugestão nova → Rejeitar → Confirmar rejeição | Sem escolher motivo | Recusada: "Informe o motivo da rejeição…" (422); continua Pendente | Recusada com "Informe o motivo da rejeição (...)"; a sugestão continuou Pendente | semana4-rejeicao-sem-motivo.png |
+| 16 | Idem | Motivo "Genérica" | Sugestão passa a Rejeitada (Genérica) | Sugestão passou a Rejeitada (Genérica) por Ana Souza |  |
+| 17 | SPA: a sugestão da carga inicial → Aceitar → Confirmar aceite | Justificativa opcional | Sugestão passa a Aceita; os cenários da história não mudam | Sugestão passou a Aceita por Ana Souza; os cenários do Login continuaram os mesmos |  |
+| 18 | `requisicoes.http`: "Alterar sugestão já decidida" | Rejeitar a sugestão 1, já aceita | Recusada: "A sugestão já foi aceita e não pode ser alterada" (422) | Resposta 422 com "A sugestão já foi aceita e não pode ser alterada" |  |
+| 19 | SPA: projeto "Estúdio BDD" → "Exportar feature" (sem cenários) → Exportar .feature | — | Recusada: "A história precisa ter ao menos um cenário para ser exportada" (422) | Recusada com "A história precisa ter ao menos um cenário para ser exportada" |  |
+| 20 | SPA: "Login", já sem pendências → Exportar .feature → Baixar arquivo | — | Texto em Gherkin com `# language: pt`, narrativa e cenários na ordem; arquivo `login.feature` baixado | Texto Gherkin exibido com "# language: pt", narrativa e cenários na ordem; arquivo login.feature baixado | semana4-feature.png; docs/login.feature |
 
 ## Consulta e resumo (regras 6 e 7)
 
 | # | Como verificar | Entrada | Esperado | Observado | Evidência |
 |---|---|---|---|---|---|
-| 21 | SPA: Loja, filtro "Alta" | — | Só as histórias de prioridade alta, com quantidade de cenários e de sugestões pendentes | | |
-| 22 | SPA: Loja → Ver resumo | — | Números iguais aos dados cadastrados (conferir contando na tela das histórias) | | |
+| 21 | SPA: Loja, filtro "Alta" | — | Só as histórias de prioridade alta, com quantidade de cenários e de sugestões pendentes | Só a história "Login" apareceu, com 2 cenários e nenhuma sugestão pendente |  |
+| 22 | SPA: Loja → Ver resumo | — | Números iguais aos dados cadastrados (conferir contando na tela das histórias) | 3 histórias; cenários: 4 escritos pelo analista e 0 da IA; sugestões: 0 pendentes, 1 aceita, 1 rejeitada; motivo: Genérica (1). Números conferem com os dados cadastrados | semana4-resumo.png |
 
 ## Persistência
 
 | # | Como verificar | Entrada | Esperado | Observado | Evidência |
 |---|---|---|---|---|---|
-| 23 | Parar a API (Ctrl + C) e subir de novo | — | Tudo o que foi cadastrado continua lá; a carga de dados fictícios não roda de novo | | |
+| 23 | Parar a API (Ctrl + C) e subir de novo | — | Tudo o que foi cadastrado continua lá; a carga de dados fictícios não roda de novo | A carga de dados fictícios não rodou de novo; a história "Recuperar senha" e as decisões das sugestões continuaram lá após reiniciar |  |
 
 ## Testes automatizados
 
 | # | Como verificar | Esperado | Observado | Evidência |
 |---|---|---|---|---|
-| 24 | `mvn test` | 18 testes, 0 falhas: cenário sem Então rejeitado, rejeição sem motivo, exportação com sugestão pendente e ArchUnit (controllers não acessam repositórios) | | `semana3-mvn-test.png` |
+| 24 | `mvn test` | 18 testes, 0 falhas: cenário sem Então rejeitado, rejeição sem motivo, exportação com sugestão pendente e ArchUnit (controllers não acessam repositórios) | Tests run: 18, Failures: 0, Errors: 0; BUILD SUCCESS | `semana3-mvn-test.png` |
