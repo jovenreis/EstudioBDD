@@ -1,17 +1,14 @@
-const ROTULO_PRIORIDADE = { ALTA: 'Alta', MEDIA: 'Média', BAIXA: 'Baixa' }
-
-function plural(n, singular, pluralTexto) {
-  return `${n} ${n === 1 ? singular : pluralTexto}`
-}
+import { Link } from 'react-router-dom'
+import { PRIORIDADES, plural, rotulo } from '../rotulos.js'
 
 export default function CartaoHistoria({ historia }) {
   const pendentes = historia.quantidadeSugestoesPendentes
 
   return (
-    <article className={`cartao prioridade-${historia.prioridade.toLowerCase()}`}>
+    <Link to={`/historias/${historia.id}`} className={`cartao prioridade-${historia.prioridade.toLowerCase()}`}>
       <div className="cartao-topo">
         <h3>{historia.titulo}</h3>
-        <span className="prioridade">{ROTULO_PRIORIDADE[historia.prioridade]}</span>
+        <span className="prioridade">{rotulo(PRIORIDADES, historia.prioridade)}</span>
       </div>
       <div className="cartao-corpo">
         <p className="autor">por {historia.autorNome}</p>
@@ -24,6 +21,6 @@ export default function CartaoHistoria({ historia }) {
           </li>
         </ul>
       </div>
-    </article>
+    </Link>
   )
 }

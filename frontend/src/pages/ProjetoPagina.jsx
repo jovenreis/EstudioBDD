@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { api } from '../api.js'
 import CartaoHistoria from '../components/CartaoHistoria.jsx'
+import { PRIORIDADES } from '../rotulos.js'
 
-const FILTROS = [
-  { valor: '', rotulo: 'Todas' },
-  { valor: 'ALTA', rotulo: 'Alta' },
-  { valor: 'MEDIA', rotulo: 'Média' },
-  { valor: 'BAIXA', rotulo: 'Baixa' },
-]
+const FILTROS = [{ valor: '', rotulo: 'Todas' }, ...PRIORIDADES]
 
 export default function ProjetoPagina() {
   const { id } = useParams()
@@ -38,6 +34,10 @@ export default function ProjetoPagina() {
       <header className="projeto-cabecalho">
         <h1>{projeto.nome}</h1>
         {projeto.descricao && <p className="descricao">{projeto.descricao}</p>}
+        <div className="acoes">
+          <Link to={`/projetos/${id}/historias/nova`} className="botao botao-principal">Nova história</Link>
+          <Link to={`/projetos/${id}/resumo`} className="botao botao-discreto">Ver resumo</Link>
+        </div>
         {projeto.contextoDominio && (
           <details className="glossario">
             <summary>Contexto do domínio</summary>

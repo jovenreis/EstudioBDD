@@ -72,7 +72,13 @@ a {
   align-items: center;
   gap: 8px;
   font-size: 14px;
+  font-weight: 400;
   color: var(--tinta-suave);
+  white-space: nowrap;
+}
+
+.seletor select {
+  width: auto;
 }
 
 .seletor select {
@@ -90,7 +96,7 @@ a {
   display: grid;
   grid-template-columns: 220px 1fr;
   gap: 32px;
-  max-width: 1120px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 32px 24px 64px;
 }
@@ -282,6 +288,449 @@ h1 {
   font-weight: 700;
 }
 
+/* a ficha inteira é um link para a história */
+a.cartao {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.cartao:hover h3 {
+  color: var(--azul);
+}
+
+/* botões e formulários */
+
+.botao {
+  display: inline-block;
+  font: inherit;
+  font-size: 15px;
+  padding: 7px 16px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.botao:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.botao-principal {
+  background: var(--azul);
+  color: #fff;
+}
+
+.botao-discreto {
+  background: var(--superficie);
+  border-color: var(--linha);
+  color: var(--tinta);
+}
+
+.botao-perigo {
+  background: var(--alta);
+  color: #fff;
+}
+
+/* botões soltos dentro de grids não devem esticar */
+.historia-principal > .botao,
+.cenario-editor > .botao {
+  justify-self: start;
+}
+
+.acoes,
+.confirmacao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.formulario,
+.cenario-editor,
+.decisao {
+  display: grid;
+  gap: 14px;
+}
+
+.formulario-pagina {
+  max-width: 640px;
+  display: grid;
+  gap: 20px;
+}
+
+label {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--tinta);
+  padding: 7px 10px;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--superficie);
+  width: 100%;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.narrativa-campos {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--superficie);
+}
+
+.narrativa-campos legend {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
+.mensagem-erro {
+  padding: 10px 14px;
+  border-left: 3px solid var(--alta);
+  background: #fbeeec;
+  color: var(--alta);
+  font-size: 15px;
+}
+
+.mensagem-erro ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
+.voltar {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.voltar::before {
+  content: '← ';
+}
+
+/* página da história: história à esquerda, sugestões ao lado */
+
+.historia-pagina {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 28px;
+  align-items: start;
+}
+
+.historia-principal {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.historia-cabecalho {
+  --cor-prioridade: var(--tinta-suave);
+  display: grid;
+  gap: 10px;
+  padding: 18px 20px;
+  background: var(--superficie);
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(29, 42, 54, 0.12);
+}
+
+.historia-cabecalho h1 {
+  font-size: 26px;
+}
+
+.narrativa {
+  font-size: 17px;
+  max-width: 65ch;
+}
+
+.palavra-chave {
+  font-weight: 700;
+  color: var(--azul);
+}
+
+.secao-titulo {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+h2 {
+  font-size: 19px;
+}
+
+.cenarios {
+  display: grid;
+  gap: 12px;
+}
+
+.cenario {
+  display: grid;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--superficie);
+  border-left: 3px solid var(--linha);
+  border-radius: 3px;
+}
+
+.cenario-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.cenario h3 {
+  font-size: 16px;
+}
+
+.passos {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+}
+
+.passos li.continuacao {
+  padding-left: 22px;
+}
+
+.selo {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--pauta);
+  color: var(--tinta);
+}
+
+.passos-editor {
+  margin: 0;
+  padding-left: 22px;
+  display: grid;
+  gap: 8px;
+}
+
+.passos-editor li {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.passo-botoes {
+  display: flex;
+  gap: 4px;
+}
+
+.passo-botoes button {
+  font: inherit;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--superficie);
+  cursor: pointer;
+}
+
+.passo-botoes button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* exportação */
+
+.exportacao {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.feature {
+  width: 100%;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--superficie);
+}
+
+.feature-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--linha);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.feature pre {
+  margin: 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* painel de sugestões */
+
+.painel-sugestoes {
+  display: grid;
+  gap: 14px;
+  position: sticky;
+  top: 16px;
+  padding: 16px;
+  background: #f7f9fb;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+}
+
+.painel-sugestoes .filtro {
+  margin-bottom: 0;
+}
+
+.sugestoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.sugestao {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--superficie);
+  border-left: 3px solid var(--media);
+  border-radius: 3px;
+  font-size: 15px;
+}
+
+.decisao-aceita {
+  border-left-color: var(--baixa);
+}
+
+.decisao-rejeitada {
+  border-left-color: var(--tinta-suave);
+}
+
+.sugestao-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.sugestao-conteudo {
+  white-space: pre-wrap;
+}
+
+.sugestao details summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--azul);
+}
+
+.sugestao details p {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--tinta-suave);
+}
+
+/* resumo */
+
+.resumo {
+  display: grid;
+  gap: 16px;
+}
+
+.total {
+  font-size: 18px;
+}
+
+.total strong {
+  font-family: var(--fonte-titulo);
+  font-size: 40px;
+  margin-right: 6px;
+}
+
+.resumo-grupos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.resumo-grupos > div {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  padding: 16px 18px;
+  background: var(--superficie);
+  border-radius: 3px;
+}
+
+.barras {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.barras li {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  grid-template-columns: minmax(0, 1fr) 32px;
+  grid-template-areas:
+    'rotulo valor'
+    'trilho trilho';
+}
+
+.barra-rotulo {
+  grid-area: rotulo;
+}
+
+.barra-valor {
+  grid-area: valor;
+  text-align: right;
+  font-weight: 700;
+}
+
+.barra-trilho {
+  grid-area: trilho;
+  height: 8px;
+  background: var(--pauta);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barra {
+  display: block;
+  height: 100%;
+  background: var(--azul);
+}
+
 /* celular */
 
 @media (max-width: 720px) {
@@ -307,5 +756,33 @@ h1 {
 
   .seletor > span {
     display: none;
+  }
+
+  .historia-pagina {
+    grid-template-columns: 1fr;
+  }
+
+  .painel-sugestoes {
+    position: static;
+  }
+
+  .passos-editor li {
+    grid-template-columns: 1fr auto;
+  }
+
+  .passos-editor li input {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* tela média: a página da história empilha antes do celular */
+@media (max-width: 1080px) and (min-width: 721px) {
+  .historia-pagina {
+    grid-template-columns: 1fr;
+  }
+
+  .painel-sugestoes {
+    position: static;
   }
 }
