@@ -201,8 +201,8 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
   e motivo obrigatório escolhido numa lista; exportação que mostra o texto e oferece o download;
   resumo com barras; `MensagemErro` mostrando o `detail` e os campos inválidos devolvidos pela
   API. A SPA não esconde botões de quem não é autor: a recusa (403) vem da API e aparece na tela.
-- **Decisão do grupo:** _(preencher depois de testar)_
-- **Mudanças realizadas:** _(preencher)_
+- **Decisão do grupo:** aceitamos a proposta depois de executar o roteiro de verificação pela SPA.
+- **Mudanças realizadas:** nenhuma no código proposto.
 - **Verificação:** execução do roteiro em `docs/roteiro-verificacao.md` pela SPA.
 
 ## 10. Tela de login com e-mail e senha
