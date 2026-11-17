@@ -73,6 +73,15 @@ public class HistoriaUsuario {
     @OrderBy("registradaEm ASC")
     private List<Sugestao> sugestoes = new ArrayList<>();
 
+    // etapa atual no fluxo do projeto (nula quando o projeto não usa fluxo)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "etapa_atual_id")
+    private EtapaFluxo etapaAtual;
+
+    @OneToMany(mappedBy = "historia", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("dataHora ASC")
+    private List<HistoricoTransicao> historico = new ArrayList<>();
+
     protected HistoriaUsuario() {
     }
 
@@ -137,6 +146,28 @@ public class HistoriaUsuario {
     public void adicionarSugestao(Sugestao sugestao) {
         sugestao.setHistoria(this);
         sugestoes.add(sugestao);
+    }
+
+    // move a história para o destino da transição e registra no histórico
+    public void registrarTransicao(TransicaoFluxo transicao, Usuario usuario, String comentario) {
+        this.etapaAtual = transicao.getDestino();
+        historico.add(new HistoricoTransicao(this, transicao, usuario, comentario));
+    }
+
+    public long quantidadeSugestoesPendentes() {
+        return sugestoes.stream().filter(Sugestao::isPendente).count();
+    }
+
+    public EtapaFluxo getEtapaAtual() {
+        return etapaAtual;
+    }
+
+    public void setEtapaAtual(EtapaFluxo etapaAtual) {
+        this.etapaAtual = etapaAtual;
+    }
+
+    public List<HistoricoTransicao> getHistorico() {
+        return historico;
     }
 
     public Long getId() {

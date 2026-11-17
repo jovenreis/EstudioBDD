@@ -106,6 +106,27 @@ Funcionalidade: Login
 }
 ```
 
+## Fluxo de aprovação (atividade bônus)
+
+Detalhes em [bonus-fluxo.md](bonus-fluxo.md).
+
+| Método | Caminho | Descrição | Respostas |
+|---|---|---|---|
+| GET | `/api/projetos/{id}/quadro` | Colunas do quadro (uma por etapa) com as histórias de cada uma | 200, 404, 422 (projeto sem fluxo) |
+| PUT | `/api/projetos/{id}/fluxo` | Define o fluxo do projeto `{fluxoId}` (nulo desliga) | 200, 404, 422 |
+| GET * | `/api/historias/{id}/acoes` | Ações que o usuário atual pode tentar na etapa atual | 200, 404 |
+| POST * | `/api/historias/{id}/acoes/{transicaoId}` | Executa a ação; corpo opcional `{comentario}`. Devolve a história atualizada | 200, 403 (papel), 404, 422 (fora da etapa, sem comentário, próprio autor, sem cenário, com pendência) |
+| GET | `/api/historias/{id}/historico` | Transições executadas, com usuário, data e comentário | 200, 404 |
+| GET | `/api/fluxos` | Lista os fluxos | 200 |
+| GET | `/api/fluxos/{id}` | Fluxo com etapas e transições | 200, 404 |
+| POST | `/api/fluxos/{id}/etapas` | Cadastra `{nome, posicao, inicial, etapaFinal, permiteEdicao}` | 201, 400, 404, 409, 422 |
+| PUT | `/api/fluxos/{id}/etapas/{etapaId}` | Altera uma etapa | 200, 400, 404, 409, 422 |
+| POST | `/api/fluxos/{id}/transicoes` | Cadastra `{nomeAcao, origemId, destinoId, papelPermitido, exigeComentario, exigeUsuarioDiferenteDoAutor, exigeCenarios, exigeSemSugestaoPendente}` | 201, 400, 404, 422 |
+
+Com o fluxo ativo, `PUT/DELETE` de história e cenários também devolvem 422 quando a etapa
+não permite edição, e a exportação devolve 422 fora da etapa final. `GET /api/historias/{id}`
+passa a trazer `usaFluxo`, `etapaNome` e `podeEditar`; o login e `/api/usuarios` trazem `papel`.
+
 ## CORS
 
 A API só aceita chamadas de navegador vindas da origem da SPA, configurada em

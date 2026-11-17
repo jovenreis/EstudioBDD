@@ -11,6 +11,7 @@ classDiagram
         String nome
         String email
         String senhaHash
+        Papel papel
     }
 
     class Projeto {
@@ -58,6 +59,11 @@ classDiagram
         LocalDateTime decididaEm
     }
 
+    class Papel {
+        <<enumeration>>
+        ANALISTA
+        REVISOR
+    }
     class Prioridade {
         <<enumeration>>
         ALTA
@@ -100,6 +106,9 @@ classDiagram
     Sugestao "0..*" --> "1" Usuario : registradaPor
     Sugestao "0..*" --> "0..1" Usuario : decididaPor
 ```
+
+As entidades do fluxo de aprovação (atividade bônus: `Fluxo`, `EtapaFluxo`,
+`TransicaoFluxo`, `HistoricoTransicao`) estão em [bonus-fluxo.md](bonus-fluxo.md).
 
 ## Decisões de modelagem
 

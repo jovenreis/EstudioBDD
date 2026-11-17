@@ -83,6 +83,13 @@ export const api = {
   rejeitarSugestao: (id, motivo, justificativa) =>
     requisitar('POST', `/api/sugestoes/${id}/rejeitar`, { motivo: motivo || null, justificativa }),
 
+  // atividade bônus: fluxo de aprovação
+  quadro: (projetoId) => requisitar('GET', `/api/projetos/${projetoId}/quadro`),
+  acoes: (historiaId) => requisitar('GET', `/api/historias/${historiaId}/acoes`),
+  executarAcao: (historiaId, transicaoId, comentario) =>
+    requisitar('POST', `/api/historias/${historiaId}/acoes/${transicaoId}`, { comentario }),
+  historico: (historiaId) => requisitar('GET', `/api/historias/${historiaId}/historico`),
+
   exportarFeature: async (historiaId) => {
     const resposta = await enviar('GET', `/api/historias/${historiaId}/feature`)
     return {

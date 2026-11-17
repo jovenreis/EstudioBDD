@@ -37,6 +37,9 @@ export default function ProjetoPagina() {
         <div className="acoes">
           <Link to={`/projetos/${id}/historias/nova`} className="botao botao-principal">Nova história</Link>
           <Link to={`/projetos/${id}/resumo`} className="botao botao-discreto">Ver resumo</Link>
+          {projeto.fluxoId && (
+            <Link to={`/projetos/${id}/quadro`} className="botao botao-discreto">Ver quadro</Link>
+          )}
         </div>
         {projeto.contextoDominio && (
           <details className="glossario">

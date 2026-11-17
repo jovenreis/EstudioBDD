@@ -1,15 +1,22 @@
 package com.estudiobdd.config;
 
 import com.estudiobdd.model.Cenario;
+import com.estudiobdd.model.EtapaFluxo;
+import com.estudiobdd.model.Fluxo;
 import com.estudiobdd.model.HistoriaUsuario;
 import com.estudiobdd.model.OrigemCenario;
+import com.estudiobdd.model.Papel;
 import com.estudiobdd.model.Prioridade;
 import com.estudiobdd.model.Projeto;
 import com.estudiobdd.model.Sugestao;
 import com.estudiobdd.model.TipoPasso;
+import com.estudiobdd.model.TransicaoFluxo;
 import com.estudiobdd.model.Usuario;
+import com.estudiobdd.repository.EtapaFluxoRepository;
+import com.estudiobdd.repository.FluxoRepository;
 import com.estudiobdd.repository.HistoriaUsuarioRepository;
 import com.estudiobdd.repository.ProjetoRepository;
+import com.estudiobdd.repository.TransicaoFluxoRepository;
 import com.estudiobdd.repository.UsuarioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +24,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Carrega dados fictícios para demonstração. Só roda quando o banco está vazio,
@@ -33,19 +42,29 @@ public class DadosIniciais implements CommandLineRunner {
     private final ProjetoRepository projetoRepository;
     private final HistoriaUsuarioRepository historiaRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FluxoRepository fluxoRepository;
+    private final EtapaFluxoRepository etapaRepository;
+    private final TransicaoFluxoRepository transicaoRepository;
 
     public DadosIniciais(UsuarioRepository usuarioRepository,
                          ProjetoRepository projetoRepository,
                          HistoriaUsuarioRepository historiaRepository,
-                         PasswordEncoder passwordEncoder) {
+                         PasswordEncoder passwordEncoder,
+                         FluxoRepository fluxoRepository,
+                         EtapaFluxoRepository etapaRepository,
+                         TransicaoFluxoRepository transicaoRepository) {
         this.usuarioRepository = usuarioRepository;
         this.projetoRepository = projetoRepository;
         this.historiaRepository = historiaRepository;
         this.passwordEncoder = passwordEncoder;
+        this.fluxoRepository = fluxoRepository;
+        this.etapaRepository = etapaRepository;
+        this.transicaoRepository = transicaoRepository;
     }
 
-    private Usuario usuarioDemo(String nome, String email) {
+    private Usuario usuarioDemo(String nome, String email, Papel papel) {
         Usuario u = new Usuario(nome, email);
+        u.setPapel(papel);
         u.setSenhaHash(passwordEncoder.encode(SENHA_DEMO));
         return usuarioRepository.save(u);
     }
@@ -58,9 +77,9 @@ public class DadosIniciais implements CommandLineRunner {
             return;
         }
 
-        Usuario ana = usuarioDemo("Ana Souza", "ana.souza@exemplo.com");
-        Usuario carlos = usuarioDemo("Carlos Lima", "carlos.lima@exemplo.com");
-        usuarioDemo("Beatriz Rocha", "beatriz.rocha@exemplo.com");
+        Usuario ana = usuarioDemo("Ana Souza", "ana.souza@exemplo.com", Papel.ANALISTA);
+        Usuario carlos = usuarioDemo("Carlos Lima", "carlos.lima@exemplo.com", Papel.ANALISTA);
+        Usuario beatriz = usuarioDemo("Beatriz Rocha", "beatriz.rocha@exemplo.com", Papel.REVISOR);
 
         Projeto loja = projetoRepository.save(new Projeto(
                 "Loja",
@@ -102,12 +121,54 @@ public class DadosIniciais implements CommandLineRunner {
         carrinho.adicionarCenario(addOk);
         historiaRepository.save(carrinho);
 
+        // atividade bônus: o projeto "Estúdio BDD" usa o fluxo de aprovação; o "Loja" não usa
+        Fluxo fluxo = criarFluxoPadrao();
+        EtapaFluxo rascunho = fluxo.etapaInicial().orElseThrow();
+        estudio.setFluxo(fluxo);
+
         HistoriaUsuario exportar = new HistoriaUsuario(estudio, ana, "Exportar feature",
                 "analista", "exportar uma história como arquivo .feature", "usar os cenários em testes automatizados",
                 Prioridade.BAIXA);
+        exportar.setEtapaAtual(rascunho);
         historiaRepository.save(exportar);
 
-        log.info("Dados de demonstração carregados: 3 usuários, 2 projetos, 3 histórias.");
+        HistoriaUsuario registrar = new HistoriaUsuario(estudio, beatriz, "Registrar sugestão",
+                "analista", "registrar a sugestão recebida de uma IA", "decidir depois se ela será usada",
+                Prioridade.MEDIA);
+        Cenario registrarOk = new Cenario("Sugestão registrada fica pendente", OrigemCenario.HUMANO);
+        registrarOk.adicionarPasso(TipoPasso.DADO, "a história \"Login\" sem sugestões");
+        registrarOk.adicionarPasso(TipoPasso.QUANDO, "o analista registra uma sugestão do ChatGPT");
+        registrarOk.adicionarPasso(TipoPasso.ENTAO, "a sugestão aparece como pendente");
+        registrar.adicionarCenario(registrarOk);
+        registrar.setEtapaAtual(rascunho);
+        historiaRepository.save(registrar);
+
+        log.info("Dados de demonstração carregados: 3 usuários, 2 projetos, 4 histórias e o fluxo de aprovação.");
+    }
+
+    // fluxo inicial da seção 10.2 do enunciado: são só dados, nenhuma etapa aparece no serviço
+    private Fluxo criarFluxoPadrao() {
+        Fluxo fluxo = fluxoRepository.save(new Fluxo("Aprovação de histórias",
+                "Rascunho, revisão por IA, revisão humana e aprovação"));
+
+        EtapaFluxo rascunho = etapaRepository.save(new EtapaFluxo(fluxo, "Rascunho", 1, true, false, true));
+        EtapaFluxo revisaoIa = etapaRepository.save(new EtapaFluxo(fluxo, "Revisão por IA", 2, false, false, true));
+        EtapaFluxo revisaoHumana = etapaRepository.save(new EtapaFluxo(fluxo, "Revisão humana", 3, false, false, false));
+        EtapaFluxo aprovada = etapaRepository.save(new EtapaFluxo(fluxo, "Aprovada", 4, false, true, false));
+        fluxo.getEtapas().addAll(List.of(rascunho, revisaoIa, revisaoHumana, aprovada));
+
+        //                           comentário, autor diferente, cenários, sem pendência
+        transicaoRepository.save(new TransicaoFluxo(fluxo, "Solicitar revisão por IA", rascunho, revisaoIa, Papel.ANALISTA)
+                .exigindo(false, false, true, false));
+        transicaoRepository.save(new TransicaoFluxo(fluxo, "Concluir curadoria", revisaoIa, rascunho, Papel.ANALISTA)
+                .exigindo(false, false, false, true));
+        transicaoRepository.save(new TransicaoFluxo(fluxo, "Enviar para revisão", rascunho, revisaoHumana, Papel.ANALISTA)
+                .exigindo(false, false, true, true));
+        transicaoRepository.save(new TransicaoFluxo(fluxo, "Aprovar", revisaoHumana, aprovada, Papel.REVISOR)
+                .exigindo(false, true, false, false));
+        transicaoRepository.save(new TransicaoFluxo(fluxo, "Devolver", revisaoHumana, rascunho, Papel.REVISOR)
+                .exigindo(true, false, false, false));
+        return fluxo;
     }
 
     // bancos criados antes do login existir têm usuários sem senha;
@@ -117,6 +178,9 @@ public class DadosIniciais implements CommandLineRunner {
             if (u.getSenhaHash() == null) {
                 u.setSenhaHash(passwordEncoder.encode(SENHA_DEMO));
                 log.info("Senha de demonstração definida para {}", u.getEmail());
+            }
+            if (u.getPapel() == null) {
+                u.setPapel(Papel.ANALISTA);
             }
         }
     }

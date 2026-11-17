@@ -14,6 +14,7 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
 | 8 | API | 05/11/2026 | Avisos do editor e atualização do Spring Boot |
 | 9 | SPA | 05/11/2026 | Telas da SPA (Semana 4) |
 | 10 | SPA | 13/11/2026 | Tela de login com e-mail e senha |
+| 11 | API e SPA | 16/11/2026 | Atividade bônus: fluxo de aprovação configurável |
 
 ---
 
@@ -227,3 +228,24 @@ Mínimo exigido: seis interações relevantes (ao menos três da API e três da 
   `UsuarioContext` com `entrar` e `sair`, no lugar da lista de usuários.
 - **Verificação:** `mvn test` 22 testes passando e os itens 25 a 30 do roteiro de
   verificação: senha errada recusada, login correto, Sair e senha guardada como hash no banco.
+
+## 11. Atividade bônus: fluxo de aprovação configurável
+
+- **Parte:** API e SPA
+- **Ferramenta:** Claude (Anthropic)
+- **Problema:** a quatro dias da entrega, com o obrigatório pronto, decidir se faríamos a
+  atividade bônus (seção 10) e como implementá-la sem pôr em risco a versão que já funcionava.
+  No começo, achávamos que o bônus era a integração com uma API de IA; a IA mostrou que essa
+  integração é um item opcional da seção 11, e que o bônus é o fluxo da seção 10.
+- **Prompt (resumo):** perguntamos como fazer o bônus e pedimos a implementação.
+- **Proposta da IA:** quatro entidades (`Fluxo`, `EtapaFluxo`, `TransicaoFluxo`,
+  `HistoricoTransicao`), papel no usuário, fluxo no projeto e etapa na história; um
+  `FluxoService` que lê a transição e suas condições do banco, sem `if` por etapa; quadro e
+  botões de ação na SPA gerados a partir da API; fluxo ligado só ao projeto "Estúdio BDD", para o
+  projeto "Loja" continuar como no roteiro das regras 1 a 7; desenvolvimento numa branch `bonus`.
+  A IA recomendou não fazer extras por causa do prazo; a decisão ficou com o grupo.
+- **Decisão do grupo:** fazer o bônus e também a integração com IA, na branch `bonus`, e só
+  juntar na `main` se tudo passar no roteiro. Aceitamos separar a condição "cenários e nenhuma
+  sugestão pendente" em duas colunas, porque a tabela da seção 10.2 usa as duas separadas.
+- **Mudanças realizadas:** nenhuma no código proposto.
+- **Verificação:** `mvn test` com 30 testes passando e consulta do quadro pela API.

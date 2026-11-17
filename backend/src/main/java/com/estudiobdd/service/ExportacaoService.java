@@ -35,6 +35,14 @@ public class ExportacaoService {
     }
 
     private void validarExportacao(HistoriaUsuario historia) {
+        // bônus: com fluxo ativo, só exporta história na etapa final
+        if (historia.getProjeto() != null && historia.getProjeto().usaFluxo()
+                && (historia.getEtapaAtual() == null || !historia.getEtapaAtual().isFinal())) {
+            String etapa = historia.getEtapaAtual() == null ? "-" : historia.getEtapaAtual().getNome();
+            throw new RegraNegocioException("Com o fluxo de aprovação ativo, só histórias na etapa final podem ser "
+                    + "exportadas. Etapa atual: \"" + etapa + "\"");
+        }
+
         if (historia.getCenarios().isEmpty()) {
             throw new RegraNegocioException("A história precisa ter ao menos um cenário para ser exportada");
         }

@@ -3,6 +3,7 @@ package com.estudiobdd.service;
 import com.estudiobdd.model.Projeto;
 import com.estudiobdd.repository.HistoriaUsuarioRepository;
 import com.estudiobdd.repository.ProjetoRepository;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +22,17 @@ public class ProjetoService {
 
     @Transactional(readOnly = true)
     public List<Projeto> listar() {
-        return projetoRepository.findAllByOrderByNomeAsc();
+        List<Projeto> projetos = projetoRepository.findAllByOrderByNomeAsc();
+        projetos.forEach(p -> Hibernate.initialize(p.getFluxo()));
+        return projetos;
     }
 
     @Transactional(readOnly = true)
     public Projeto buscar(Long id) {
-        return projetoRepository.findById(id)
+        Projeto projeto = projetoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Projeto " + id + " não encontrado"));
+        Hibernate.initialize(projeto.getFluxo());
+        return projeto;
     }
 
     // regra 1: nome do projeto único

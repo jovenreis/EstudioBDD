@@ -7,6 +7,7 @@ import HistoriaPagina from './pages/HistoriaPagina.jsx'
 import HistoriaForm from './pages/HistoriaForm.jsx'
 import ResumoPagina from './pages/ResumoPagina.jsx'
 import LoginPagina from './pages/LoginPagina.jsx'
+import QuadroPagina from './pages/QuadroPagina.jsx'
 import { useUsuario } from './UsuarioContext.jsx'
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/" element={<Inicio />} />
             <Route path="/projetos/:id" element={<ProjetoPagina />} />
             <Route path="/projetos/:id/resumo" element={<ResumoPagina />} />
+            <Route path="/projetos/:id/quadro" element={<QuadroPagina />} />
             <Route path="/projetos/:projetoId/historias/nova" element={<HistoriaForm />} />
             <Route path="/historias/:id" element={<HistoriaPagina />} />
             <Route path="/historias/:id/editar" element={<HistoriaForm />} />

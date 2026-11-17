@@ -8,7 +8,7 @@ e resultado observado. A coluna "Observado" é preenchida pelo grupo ao executar
 ```bash
 cd /workspaces/EstudioBDD
 docker compose down -v && docker compose up -d      # banco zerado, com os dados fictícios
-cd backend && mvn test                               # 22 testes
+cd backend && mvn test                               # 30 testes (22 antes do bônus)
 mvn spring-boot:run                                  # API na 8080
 # em outro terminal
 cd /workspaces/EstudioBDD/frontend && npm install && npm run dev   # SPA na 5173
@@ -96,3 +96,24 @@ Na primeira execução (antes do login) foram 18 testes passando; com o login s�
 | 28 | SPA: tela de login | `ana.souza@exemplo.com` e senha `senha123` | Entra; o topo mostra "Ana Souza" e o botão Sair | Entrou; o topo mostrou "Ana Souza" e o botão Sair; continuou logado depois do F5 | semana4-login-ok.png |
 | 29 | SPA: clicar em Sair | — | Volta para a tela de login | Voltou para a tela de login |  |
 | 30 | Banco: `docker exec -it estudio-bdd-db psql -U estudio -d estudiobdd -c "select email, senha_hash from usuario"` | — | A coluna `senha_hash` mostra hashes começando com `$2a$`, nunca a senha em texto | A coluna senha_hash mostrou hashes começando com "$2a$10$", diferentes entre si; a senha em texto não aparece | semana4-senha-hash.png |
+
+## Atividade bônus: fluxo de aprovação
+
+Fazer com o banco zerado (`docker compose down -v && docker compose up -d`), no projeto
+**Estúdio BDD**, que usa o fluxo. Histórias: "Exportar feature" (id 3, autora Ana, sem cenários)
+e "Registrar sugestão" (id 4, autora Beatriz, 1 cenário). Ana é analista; Beatriz é revisora.
+
+| # | Como verificar | Entrada | Esperado | Observado | Evidência |
+|---|---|---|---|---|---|
+| 31 | SPA (Ana): Estúdio BDD → Ver quadro | — | Quatro colunas vindas da API (Rascunho, Revisão por IA, Revisão humana, Aprovada); as duas histórias em Rascunho | Não executado antes da entrega (falta de tempo) | |
+| 32 | `requisicoes.http`: "Transição inválida" | Beatriz aprova a história 3, que está em Rascunho | Recusada: "A ação "Aprovar" não está disponível na etapa "Rascunho"" (422) | Não executado antes da entrega (falta de tempo) | |
+| 33 | SPA (Ana): "Exportar feature" → Enviar para revisão → Confirmar | História sem cenários | Recusada: precisa de ao menos um cenário (422) | Não executado antes da entrega (falta de tempo) | |
+| 34 | SPA (Ana): criar um cenário válido → Solicitar revisão por IA → registrar uma sugestão → Concluir curadoria | Sugestão ainda pendente | Recusada: "Aceite ou rejeite as sugestões pendentes antes de "Concluir curadoria"" (422) | Não executado antes da entrega (falta de tempo) | |
+| 35 | SPA (Ana): decidir a sugestão → Concluir curadoria → Enviar para revisão | — | História passa por Rascunho e chega a Revisão humana; aparece "Edição bloqueada nesta etapa" e Ana não tem ações | Não executado antes da entrega (falta de tempo) | |
+| 36 | SPA (Ana): na história em Revisão humana → Editar história → Salvar | Qualquer alteração | Recusada: "A história está na etapa "Revisão humana", que não permite edição" (422) | Não executado antes da entrega (falta de tempo) | |
+| 37 | SPA (Beatriz): "Exportar feature" → Devolver → Confirmar | Sem comentário | Recusada: "Informe um comentário para "Devolver"" (422) | Não executado antes da entrega (falta de tempo) | |
+| 38 | SPA (Beatriz): "Exportar feature" → Aprovar → Confirmar | — | História vai para Aprovada; o histórico lista as transições com usuário e data | Não executado antes da entrega (falta de tempo) | |
+| 39 | SPA (Ana): "Registrar sugestão" (da Beatriz) → Enviar para revisão; depois SPA (Beatriz) → Aprovar | — | Recusada: "A ação "Aprovar" precisa ser feita por um usuário diferente do autor da história" (422) | Não executado antes da entrega (falta de tempo) | |
+| 40 | SPA: Exportar .feature em "Registrar sugestão" (Revisão humana) e em "Exportar feature" (Aprovada) | — | Primeira recusada: só exporta na etapa final (422); segunda gera o .feature (200) | Não executado antes da entrega (falta de tempo) | |
+| 41 | `requisicoes.http`: seção "Bônus: nova etapa só com dados" (3 requisições), depois SPA → Ver quadro | — | Sem reiniciar nem mudar código: o quadro passa a ter 5 colunas, e Beatriz vê "Liberar para desenvolvimento" na história aprovada | Não executado antes da entrega (falta de tempo) | |
+| 42 | `mvn test` | — | 30 testes, 0 falhas (inclui `FluxoServiceTest`) | Tests run: 30, Failures: 0; BUILD SUCCESS | |

@@ -74,6 +74,15 @@ cd frontend && npm install && npm run dev
 6. Consulta do projeto: histórias com quantidade de cenários e de sugestões pendentes, filtro por prioridade.
 7. Resumo do projeto: total de histórias, cenários por origem, sugestões por decisão, motivos de rejeição mais frequentes.
 
+## Fluxo de aprovação (bônus)
+
+- Etapas, transições e condições ficam no banco (`Fluxo`, `EtapaFluxo`, `TransicaoFluxo`).
+  **Nunca** escrever nome de etapa no código nem um `if` por etapa: o `FluxoService` lê a
+  transição e suas colunas `exige...`.
+- Só vale quando `projeto.usaFluxo()`; projetos sem fluxo seguem as regras 1 a 7 como antes.
+- A SPA mostra os botões que vêm de `GET /api/historias/{id}/acoes` e as colunas de
+  `GET /api/projetos/{id}/quadro`.
+
 ## Não fazer
 
 - Não incluir credenciais reais nem dados pessoais reais.

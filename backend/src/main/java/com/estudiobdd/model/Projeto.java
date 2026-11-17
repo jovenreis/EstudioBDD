@@ -2,9 +2,12 @@ package com.estudiobdd.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -33,6 +36,11 @@ public class Projeto {
 
     @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
+
+    // fluxo de aprovação usado pelo projeto (opcional; atividade bônus)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fluxo_id")
+    private Fluxo fluxo;
 
     // OneToMany já é LAZY por padrão; as histórias só são carregadas quando acessadas
     @OneToMany(mappedBy = "projeto")
@@ -88,6 +96,19 @@ public class Projeto {
 
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
+    }
+
+    public Fluxo getFluxo() {
+        return fluxo;
+    }
+
+    public void setFluxo(Fluxo fluxo) {
+        this.fluxo = fluxo;
+    }
+
+    // o fluxo só vale se estiver cadastrado e ativo
+    public boolean usaFluxo() {
+        return fluxo != null && fluxo.isAtivo();
     }
 
     public List<HistoriaUsuario> getHistorias() {

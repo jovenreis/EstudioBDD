@@ -1,6 +1,7 @@
 package com.estudiobdd.service;
 
 import com.estudiobdd.model.Cenario;
+import com.estudiobdd.model.EtapaFluxo;
 import com.estudiobdd.model.HistoriaUsuario;
 import com.estudiobdd.model.Prioridade;
 import com.estudiobdd.model.Projeto;
@@ -38,6 +39,11 @@ public class HistoriaService {
         }
 
         nova.vincular(projeto, autor);
+        // bônus: com fluxo ativo, a história nasce na etapa inicial
+        if (projeto.usaFluxo()) {
+            nova.setEtapaAtual(projeto.getFluxo().etapaInicial()
+                    .orElseThrow(() -> new RegraNegocioException("O fluxo do projeto não tem etapa inicial")));
+        }
         return carregarDetalhes(historiaRepository.save(nova));
     }
 
@@ -57,6 +63,7 @@ public class HistoriaService {
         // as contagens de cenários e sugestões são feitas no controller,
         // então as coleções precisam estar carregadas antes de sair da transação
         for (HistoriaUsuario h : historias) {
+            Hibernate.initialize(h.getEtapaAtual());
             Hibernate.initialize(h.getAutor());
             Hibernate.initialize(h.getCenarios());
             Hibernate.initialize(h.getSugestoes());
@@ -100,6 +107,12 @@ public class HistoriaService {
         if (!historia.isAutor(usuarioId)) {
             throw new AcessoNegadoException("Somente o autor da história pode alterá-la ou excluí-la");
         }
+        // bônus: com fluxo ativo, só edita em etapa que permite edição (e nunca na final)
+        EtapaFluxo etapa = historia.getEtapaAtual();
+        if (historia.getProjeto().usaFluxo() && etapa != null && (!etapa.isPermiteEdicao() || etapa.isFinal())) {
+            throw new RegraNegocioException("A história está na etapa \"" + etapa.getNome()
+                    + "\", que não permite edição");
+        }
         return historia;
     }
 
@@ -127,6 +140,8 @@ public class HistoriaService {
     // com open-in-view desligado, o que o controller vai ler precisa ser carregado aqui
     private HistoriaUsuario carregarDetalhes(HistoriaUsuario h) {
         Hibernate.initialize(h.getProjeto());
+        Hibernate.initialize(h.getProjeto().getFluxo());
+        Hibernate.initialize(h.getEtapaAtual());
         Hibernate.initialize(h.getAutor());
         for (Cenario c : h.getCenarios()) {
             Hibernate.initialize(c.getPassos());

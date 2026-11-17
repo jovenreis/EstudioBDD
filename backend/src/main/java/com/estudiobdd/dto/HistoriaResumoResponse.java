@@ -7,7 +7,8 @@ import com.estudiobdd.model.Prioridade;
 // usado na lista de histórias do projeto (regra 6)
 public record HistoriaResumoResponse(Long id, String titulo, Prioridade prioridade,
                                      Long autorId, String autorNome,
-                                     int quantidadeCenarios, long quantidadeSugestoesPendentes) {
+                                     int quantidadeCenarios, long quantidadeSugestoesPendentes,
+                                     String etapaNome) {
 
     public static HistoriaResumoResponse de(HistoriaUsuario h) {
         long pendentes = h.getSugestoes().stream()
@@ -15,6 +16,7 @@ public record HistoriaResumoResponse(Long id, String titulo, Prioridade priorida
                 .count();
         return new HistoriaResumoResponse(h.getId(), h.getTitulo(), h.getPrioridade(),
                 h.getAutor().getId(), h.getAutor().getNome(),
-                h.getCenarios().size(), pendentes);
+                h.getCenarios().size(), pendentes,
+                h.getEtapaAtual() == null ? null : h.getEtapaAtual().getNome());
     }
 }

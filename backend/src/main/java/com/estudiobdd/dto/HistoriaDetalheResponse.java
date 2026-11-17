@@ -11,7 +11,8 @@ public record HistoriaDetalheResponse(Long id, Long projetoId, String projetoNom
                                       String titulo, String papel, String objetivo, String beneficio,
                                       Prioridade prioridade, Long autorId, String autorNome,
                                       LocalDateTime criadaEm, LocalDateTime atualizadaEm,
-                                      List<CenarioResponse> cenarios, long quantidadeSugestoesPendentes) {
+                                      List<CenarioResponse> cenarios, long quantidadeSugestoesPendentes,
+                                      boolean usaFluxo, String etapaNome, boolean podeEditar) {
 
     public static HistoriaDetalheResponse de(HistoriaUsuario h) {
         long pendentes = h.getSugestoes().stream()
@@ -21,6 +22,11 @@ public record HistoriaDetalheResponse(Long id, Long projetoId, String projetoNom
                 h.getTitulo(), h.getPapel(), h.getObjetivo(), h.getBeneficio(),
                 h.getPrioridade(), h.getAutor().getId(), h.getAutor().getNome(),
                 h.getCriadaEm(), h.getAtualizadaEm(),
-                h.getCenarios().stream().map(CenarioResponse::de).toList(), pendentes);
+                h.getCenarios().stream().map(CenarioResponse::de).toList(), pendentes,
+                h.getProjeto().usaFluxo(),
+                h.getEtapaAtual() == null ? null : h.getEtapaAtual().getNome(),
+                // só informativo para a tela; quem bloqueia a edição é o serviço
+                !h.getProjeto().usaFluxo() || h.getEtapaAtual() == null
+                        || (h.getEtapaAtual().isPermiteEdicao() && !h.getEtapaAtual().isFinal()));
     }
 }

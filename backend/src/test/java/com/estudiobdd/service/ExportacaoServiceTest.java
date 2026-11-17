@@ -1,6 +1,8 @@
 package com.estudiobdd.service;
 
 import com.estudiobdd.model.Cenario;
+import com.estudiobdd.model.EtapaFluxo;
+import com.estudiobdd.model.Fluxo;
 import com.estudiobdd.model.HistoriaUsuario;
 import com.estudiobdd.model.OrigemCenario;
 import com.estudiobdd.model.Prioridade;
@@ -80,6 +82,23 @@ class ExportacaoServiceTest {
                     Então o acesso é liberado
                     E a página inicial é exibida
                 """);
+    }
+
+    @Test
+    void comFluxoAtivoSoExportaNaEtapaFinal() {
+        adicionarCenarioValido();
+        Fluxo fluxo = new Fluxo("Aprovação de histórias", null);
+        EtapaFluxo rascunho = new EtapaFluxo(fluxo, "Rascunho", 1, true, false, true);
+        EtapaFluxo aprovada = new EtapaFluxo(fluxo, "Aprovada", 4, false, true, false);
+        historia.getProjeto().setFluxo(fluxo);
+
+        historia.setEtapaAtual(rascunho);
+        assertThatThrownBy(() -> service.exportar(1L))
+                .isInstanceOf(RegraNegocioException.class)
+                .hasMessageContaining("etapa final");
+
+        historia.setEtapaAtual(aprovada);
+        assertThat(service.exportar(1L)).startsWith("# language: pt");
     }
 
     @Test

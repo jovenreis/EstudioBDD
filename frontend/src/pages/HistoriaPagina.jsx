@@ -8,6 +8,7 @@ import CenarioEditor from '../components/CenarioEditor.jsx'
 import ExportarFeature from '../components/ExportarFeature.jsx'
 import MensagemErro from '../components/MensagemErro.jsx'
 import PainelSugestoes from '../components/PainelSugestoes.jsx'
+import PainelFluxo from '../components/PainelFluxo.jsx'
 
 export default function HistoriaPagina() {
   const { id } = useParams()
@@ -66,6 +67,8 @@ export default function HistoriaPagina() {
             <BotaoExcluir rotulo="Excluir história" onConfirmar={excluirHistoria} />
           </div>
         </header>
+
+        {historia.usaFluxo && <PainelFluxo historia={historia} onMudou={carregar} />}
 
         <div className="secao-titulo">
           <h2>Cenários</h2>

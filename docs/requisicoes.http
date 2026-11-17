@@ -228,3 +228,47 @@ GET {{api}}/historias/1/feature
 
 ### Resumo do projeto 1
 GET {{api}}/projetos/1/resumo
+
+### --- Bônus: fluxo de aprovação (banco zerado) ---
+### Ids da carga inicial: história 3 = "Exportar feature" (Ana), 4 = "Registrar sugestão" (Beatriz)
+### Usuários: 1 = Ana (analista), 3 = Beatriz (revisora). Fluxo 1, etapas 1 a 4, transições 1 a 5.
+
+### Fluxo com etapas e transições
+GET {{api}}/fluxos/1
+
+### Quadro do projeto Estúdio BDD (projeto 2)
+GET {{api}}/projetos/2/quadro
+
+### Ações da Ana na história 3
+GET {{api}}/historias/3/acoes
+X-Usuario-Id: 1
+
+### Transição inválida: Beatriz tenta aprovar a história 3, que está em Rascunho -> 422
+POST {{api}}/historias/3/acoes/4
+X-Usuario-Id: 3
+Content-Type: application/json
+
+{ }
+
+### Histórico da história 3
+GET {{api}}/historias/3/historico
+
+### --- Bônus: nova etapa só com dados ---
+
+### 1. "Aprovada" deixa de ser a etapa final
+PUT {{api}}/fluxos/1/etapas/4
+Content-Type: application/json
+
+{ "nome": "Aprovada", "posicao": 4, "inicial": false, "etapaFinal": false, "permiteEdicao": false }
+
+### 2. Nova etapa final -> 201 (anote o id, provavelmente 5)
+POST {{api}}/fluxos/1/etapas
+Content-Type: application/json
+
+{ "nome": "Pronta para desenvolvimento", "posicao": 5, "inicial": false, "etapaFinal": true, "permiteEdicao": false }
+
+### 3. Nova ação de Aprovada para a nova etapa, para revisores -> 201
+POST {{api}}/fluxos/1/transicoes
+Content-Type: application/json
+
+{ "nomeAcao": "Liberar para desenvolvimento", "origemId": 4, "destinoId": 5, "papelPermitido": "REVISOR", "exigeComentario": false, "exigeUsuarioDiferenteDoAutor": false, "exigeCenarios": false, "exigeSemSugestaoPendente": false }

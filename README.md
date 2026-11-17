@@ -82,8 +82,8 @@ cd backend
 mvn test
 ```
 
-Os testes não precisam do banco. Eles cobrem as regras 2, 4 e 5, o login e a regra de
-arquitetura (ArchUnit: controllers não acessam repositórios).
+Os testes não precisam do banco. Eles cobrem as regras 2, 4 e 5, o login, o fluxo de
+aprovação (bônus) e a regra de arquitetura (ArchUnit: controllers não acessam repositórios).
 
 Para testar os endpoints à mão, use o arquivo `docs/requisicoes.http` com a extensão
 REST Client do VS Code.
@@ -104,11 +104,12 @@ Telas:
 
 | Caminho | Tela |
 |---|---|
-| (sem login) | Tela de login |
+| (sem login) | Tela de login, com a seleção do usuário de demonstração |
 | `/` | Início; o topo mostra o usuário logado e o botão Sair |
 | `/projetos/:id` | Histórias do projeto, com filtro por prioridade |
 | `/projetos/:id/historias/nova` | Nova história |
 | `/projetos/:id/resumo` | Resumo do projeto |
+| `/projetos/:id/quadro` | Quadro do fluxo de aprovação (bônus), uma coluna por etapa |
 | `/historias/:id` | História com os cenários (edição dos passos), exportação do `.feature` e sugestões ao lado |
 | `/historias/:id/editar` | Edição da história |
 Em desenvolvimento ela chama `/api` no próprio Vite, que repassa para a API na porta 8080
@@ -137,7 +138,8 @@ real, o próximo passo seria usar Spring Security com um token (por exemplo, JWT
 todas as requisições.
 
 Contas de demonstração (dados fictícios), todas com a senha `senha123`:
-`ana.souza@exemplo.com`, `carlos.lima@exemplo.com` e `beatriz.rocha@exemplo.com`.
+`ana.souza@exemplo.com` (analista), `carlos.lima@exemplo.com` (analista) e
+`beatriz.rocha@exemplo.com` (revisora). O papel só importa no fluxo de aprovação (bônus).
 
 ## Tarefas previstas
 
@@ -158,6 +160,7 @@ Contas de demonstração (dados fictícios), todas com a senha `senha123`:
 - [x] SPA: seleção de usuário, projetos e histórias com filtro
 - [x] SPA: edição de história e cenários, sugestões, exportação e resumo
 - [x] Roteiro de verificação
+- [x] Atividade bônus: fluxo de aprovação configurável ([descrição](docs/bonus-fluxo.md))
 
 ## Documentação
 
@@ -169,4 +172,5 @@ Contas de demonstração (dados fictícios), todas com a senha `senha123`:
 - [História e cenários iniciais](docs/cenarios-iniciais.md)
 - [Dúvidas para o professor](docs/duvidas-professor.md)
 - [Roteiro de verificação](docs/roteiro-verificacao.md)
+- [Atividade bônus: fluxo de aprovação](docs/bonus-fluxo.md)
 - [Arquivo .feature exportado pelo sistema](docs/login.feature)

@@ -2,6 +2,8 @@ package com.estudiobdd.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,12 +27,25 @@ public class Usuario {
     @Column(name = "senha_hash", length = 100)
     private String senhaHash;
 
+    // papel no fluxo de aprovação (atividade bônus)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private Papel papel = Papel.ANALISTA;
+
     protected Usuario() {
     }
 
     public Usuario(String nome, String email) {
         this.nome = nome;
         this.email = email;
+    }
+
+    public Papel getPapel() {
+        return papel;
+    }
+
+    public void setPapel(Papel papel) {
+        this.papel = papel;
     }
 
     public String getSenhaHash() {

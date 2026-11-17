@@ -12,6 +12,7 @@ export default function CartaoHistoria({ historia }) {
       </div>
       <div className="cartao-corpo">
         <p className="autor">por {historia.autorNome}</p>
+        {historia.etapaNome && <p className="autor">Etapa: {historia.etapaNome}</p>}
         <ul className="contagens">
           <li>{plural(historia.quantidadeCenarios, 'cenário', 'cenários')}</li>
           <li className={pendentes > 0 ? 'tem-pendencia' : undefined}>

@@ -108,18 +108,29 @@ a {
 }
 
 .contas-demo {
+  display: grid;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--pauta);
   font-size: 14px;
   color: var(--tinta-suave);
 }
 
-.contas-demo summary {
-  cursor: pointer;
-  color: var(--azul);
+.contas-demo-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-.contas-demo ul {
-  margin: 6px 0 0;
-  padding-left: 18px;
+.contas-demo-botoes .botao {
+  padding: 5px 12px;
+  font-size: 14px;
+}
+
+.contas-demo-botoes .selecionado {
+  border-color: var(--azul);
+  box-shadow: inset 0 0 0 1px var(--azul);
+  color: var(--azul);
 }
 
 .contas-demo code {
@@ -691,6 +702,111 @@ h2 {
   margin-top: 4px;
   font-size: 14px;
   color: var(--tinta-suave);
+}
+
+/* fluxo de aprovação (bônus) */
+
+.painel-fluxo {
+  display: grid;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--superficie);
+  border-left: 3px solid var(--azul);
+  border-radius: 3px;
+}
+
+.fluxo-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.etapa-atual {
+  font-size: 18px;
+}
+
+.historico summary {
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--azul);
+}
+
+.historico ol {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.quadro-pagina {
+  display: grid;
+  gap: 10px;
+}
+
+.quadro {
+  display: grid;
+  grid-template-columns: repeat(var(--colunas), minmax(200px, 1fr));
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-top: 8px;
+}
+
+.coluna {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-height: 180px;
+  padding: 12px;
+  background: #f7f9fb;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+}
+
+.coluna-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--margem);
+}
+
+.coluna-topo h2 {
+  font-size: 16px;
+}
+
+.mini-ficha {
+  --cor-prioridade: var(--tinta-suave);
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  padding: 10px 12px;
+  background: var(--superficie);
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(29, 42, 54, 0.12);
+  color: inherit;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.mini-ficha:hover strong {
+  color: var(--azul);
+}
+
+.mini-ficha .prioridade {
+  font-size: 12px;
+  padding: 1px 8px;
+}
+
+.papel {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--pauta);
 }
 
 /* resumo */

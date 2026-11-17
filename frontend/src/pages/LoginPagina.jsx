@@ -2,6 +2,14 @@ import { useState } from 'react'
 import { useUsuario } from '../UsuarioContext.jsx'
 import MensagemErro from '../components/MensagemErro.jsx'
 
+// usuários de demonstração (dados fictícios da carga inicial, todos com a mesma senha)
+const CONTAS_DEMO = [
+  { nome: 'Ana Souza', email: 'ana.souza@exemplo.com' },
+  { nome: 'Carlos Lima', email: 'carlos.lima@exemplo.com' },
+  { nome: 'Beatriz Rocha', email: 'beatriz.rocha@exemplo.com' },
+]
+const SENHA_DEMO = 'senha123'
+
 export default function LoginPagina() {
   const { entrar } = useUsuario()
   const [email, setEmail] = useState('')
@@ -42,15 +50,26 @@ export default function LoginPagina() {
           {entrando ? 'Entrando…' : 'Entrar'}
         </button>
 
-        <details className="contas-demo">
-          <summary>Contas de demonstração</summary>
-          <p>Senha de todas: <code>senha123</code></p>
-          <ul>
-            <li><code>ana.souza@exemplo.com</code></li>
-            <li><code>carlos.lima@exemplo.com</code></li>
-            <li><code>beatriz.rocha@exemplo.com</code></li>
-          </ul>
-        </details>
+        <div className="contas-demo">
+          <p>Ou selecione um usuário de demonstração:</p>
+          <div className="contas-demo-botoes">
+            {CONTAS_DEMO.map((c) => (
+              <button
+                key={c.email}
+                type="button"
+                className={`botao botao-discreto${email === c.email ? ' selecionado' : ''}`}
+                onClick={() => {
+                  setEmail(c.email)
+                  setSenha(SENHA_DEMO)
+                  setErro(null)
+                }}
+              >
+                {c.nome}
+              </button>
+            ))}
+          </div>
+          <p>Ele preenche o e-mail e a senha (<code>{SENHA_DEMO}</code>); depois é só entrar.</p>
+        </div>
       </form>
     </div>
   )
